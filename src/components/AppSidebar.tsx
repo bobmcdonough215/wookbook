@@ -52,7 +52,7 @@ export const AppSidebar = ({
     }
     const needle = search.trim().toLowerCase();
     return [...m.entries()]
-      .filter(([name]) => !needle || name.toLowerCase().includes(needle))
+      .filter(([name]) => name !== "Various Artists" && (!needle || name.toLowerCase().includes(needle)))
       .sort((a, b) => b[1].count - a[1].count || a[0].localeCompare(b[0]));
   }, [concerts, search]);
 

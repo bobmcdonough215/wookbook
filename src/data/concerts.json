@@ -21,13 +21,14 @@
       "venue": "Wells Fargo Center",
       "city": "Philadelphia",
       "state": "PA",
-      "special_notes": "2006-09-12",
       "id": "seed-0002",
-      "date": "2006"
+      "date": "2006-09-12"
     },
     {
       "artist": "Dave Matthews",
-      "venue": "Unknown",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
       "event": "Farm Aid",
       "id": "seed-0003",
       "date": "2006-09-30"
@@ -1807,6 +1808,7 @@
       "venue": "Santander Arena",
       "city": "Reading",
       "state": "PA",
+      "special_notes": "Co-headline show, Goose and TAB",
       "id": "seed-00d9",
       "date": "2022-11-19"
     },
@@ -1970,7 +1972,7 @@
       "city": "Philadelphia",
       "state": "PA",
       "id": "seed-00ed",
-      "date": "2025-10-27"
+      "date": "2023-10-27"
     },
     {
       "artist": "My Morning Jacket",
@@ -1979,7 +1981,7 @@
       "state": "PA",
       "special_notes": "with Josh",
       "id": "seed-00ee",
-      "date": "2025-10-28"
+      "date": "2023-10-28"
     },
     {
       "artist": "Various Artists",
@@ -2837,6 +2839,63 @@
       "event": "Farm Aid",
       "id": "seed-014e",
       "date": "2006-09-30"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "Santander Arena",
+      "city": "Reading",
+      "state": "PA",
+      "special_notes": "Co-headline show, Goose and TAB",
+      "id": "seed-0154",
+      "date": "2022-11-19"
+    },
+    {
+      "artist": "Billy Strings",
+      "venue": "Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-014f",
+      "date": "2021-11-10"
+    },
+    {
+      "artist": "Billy Strings",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0150",
+      "date": "2022-11-12"
+    },
+    {
+      "artist": "Billy Strings",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0151",
+      "date": "2022-11-13"
+    },
+    {
+      "artist": "Billy Strings",
+      "venue": "Hard Rock Live at Etess Arena",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-0152",
+      "date": "2023-02-18"
+    },
+    {
+      "artist": "Billy Strings",
+      "venue": "Hard Rock Live at Etess Arena",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-0153",
+      "date": "2023-02-19"
+    },
+    {
+      "artist": "MJ Lenderman + Waxahatchee",
+      "venue": "The Met Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0155",
+      "date": "2026-04-18"
     }
   ]
 }

@@ -7,6 +7,7 @@ export function useRecordingPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [audioError, setAudioError] = useState<string | null>(null);
 
   useEffect(() => {
     const audio = new Audio();
@@ -17,12 +18,17 @@ export function useRecordingPlayer() {
     const onEnded = () => setIsPlaying(false);
     const onTimeUpdate = () => setProgress(audio.currentTime);
     const onDurationChange = () => setDuration(audio.duration || 0);
+    const onError = () => {
+      setIsPlaying(false);
+      setAudioError("This recording couldn't be played — the audio file may be unavailable.");
+    };
 
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnded);
     audio.addEventListener("timeupdate", onTimeUpdate);
     audio.addEventListener("durationchange", onDurationChange);
+    audio.addEventListener("error", onError);
 
     return () => {
       audio.pause();
@@ -31,6 +37,7 @@ export function useRecordingPlayer() {
       audio.removeEventListener("ended", onEnded);
       audio.removeEventListener("timeupdate", onTimeUpdate);
       audio.removeEventListener("durationchange", onDurationChange);
+      audio.removeEventListener("error", onError);
     };
   }, []);
 
@@ -41,6 +48,7 @@ export function useRecordingPlayer() {
       audio.play();
       return;
     }
+    setAudioError(null);
     audio.src = track.src;
     audio.play();
     setCurrentTrack(track);
@@ -73,5 +81,5 @@ export function useRecordingPlayer() {
     setProgress(0);
   }, []);
 
-  return { currentTrack, isPlaying, progress, duration, play, pause, toggle, seek, dismiss };
+  return { currentTrack, isPlaying, progress, duration, audioError, play, pause, toggle, seek, dismiss };
 }

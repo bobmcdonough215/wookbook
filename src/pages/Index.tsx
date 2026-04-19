@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import rawData from "@/data/concerts.json";
 import { Concert, UpcomingItem } from "@/types/concert";
 import { useLocalStorage } from "@/lib/storage";
@@ -42,22 +43,36 @@ const Index = () => {
     isPlaying,
     progress,
     duration,
+    audioError,
     play,
     toggle,
     seek,
     dismiss,
   } = useRecordingPlayer();
+
+  useEffect(() => {
+    if (audioError) toast.error(audioError);
+  }, [audioError]);
   const [currentConcert, setCurrentConcert] = useState<Concert | null>(null);
+  const [currentTracks, setCurrentTracks] = useState<import("@/types/recording").Track[]>([]);
 
   const handlePlay = (track: import("@/types/recording").Track, concert?: Concert) => {
     play(track);
-    if (concert) setCurrentConcert(concert);
+    if (concert) {
+      setCurrentConcert(concert);
+      const entry = recordingCache.get(concert.id);
+      if (entry?.status === "found") setCurrentTracks(entry.tracks);
+    }
   };
   const handleToggle = (track: import("@/types/recording").Track, concert?: Concert) => {
     toggle(track);
-    if (concert) setCurrentConcert(concert);
+    if (concert) {
+      setCurrentConcert(concert);
+      const entry = recordingCache.get(concert.id);
+      if (entry?.status === "found") setCurrentTracks(entry.tracks);
+    }
   };
-  const handleDismiss = () => { dismiss(); setCurrentConcert(null); };
+  const handleDismiss = () => { dismiss(); setCurrentConcert(null); setCurrentTracks([]); };
 
   const titleByView: Record<ViewKey, { eyebrow: string; title: string; sub: string }> = {
     archive: { eyebrow: "Volume I", title: "The Archive", sub: "Every show, catalogued and dated." },
@@ -125,6 +140,7 @@ const Index = () => {
                   extras={extras}
                   onUpdateExtras={setExtras}
                   selectedArtist={selectedArtist}
+                  onClearArtist={() => setSelectedArtist(null)}
                   recordingCache={recordingCache}
                   hasRecording={hasRecording}
                   onFetchRecording={fetchRecording}
@@ -157,11 +173,13 @@ const Index = () => {
       {currentTrack && (
         <AudioPlayer
           track={currentTrack}
+          tracks={currentTracks}
           concert={currentConcert}
           isPlaying={isPlaying}
           progress={progress}
           duration={duration}
           onToggle={() => toggle(currentTrack)}
+          onPlayTrack={handlePlay}
           onSeek={seek}
           onDismiss={handleDismiss}
         />
