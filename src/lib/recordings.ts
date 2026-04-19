@@ -361,8 +361,9 @@ export async function searchArchive(
   return [];
 }
 
-export async function searchArchiveQ(q: string, date: string): Promise<ArchiveDoc[]> {
-  return doArchiveSearch(`${q} AND date:${date}`);
+export async function searchArchiveQ(q: string, date: string, artist?: string): Promise<ArchiveDoc[]> {
+  const docs = await doArchiveSearch(`${q} AND date:${date}`);
+  return artist ? docs.filter((d) => creatorMatchesArtist(d, artist)) : docs;
 }
 
 export async function getArchiveMP3s(identifier: string): Promise<Track[]> {
@@ -481,7 +482,7 @@ export async function findRecording(
 
   const docs =
     src.type === "archive-q"
-      ? await searchArchiveQ(src.q, date)
+      ? await searchArchiveQ(src.q, date, artist)
       : await searchArchive(src.creator, date, src.collection);
 
   if (!docs.length) throw new Error("No recordings found");
@@ -531,7 +532,7 @@ export async function checkHasRecording(
 
     const docs =
       src.type === "archive-q"
-        ? await searchArchiveQ(src.q, date)
+        ? await searchArchiveQ(src.q, date, artist)
         : await searchArchive(src.creator, date, src.collection);
     return docs.length > 0;
   } catch {
