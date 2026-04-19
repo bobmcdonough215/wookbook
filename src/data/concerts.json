@@ -1,0 +1,2842 @@
+{
+  "concerts": [
+    {
+      "artist": "Billy Joel",
+      "venue": "Wachovia Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0000",
+      "date": "2006-02-14"
+    },
+    {
+      "artist": "Motion City Soundtrack",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0001",
+      "date": "2006-03-18"
+    },
+    {
+      "artist": "The Who",
+      "venue": "Wells Fargo Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "2006-09-12",
+      "id": "seed-0002",
+      "date": "2006"
+    },
+    {
+      "artist": "Dave Matthews",
+      "venue": "Unknown",
+      "event": "Farm Aid",
+      "id": "seed-0003",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0004",
+      "date": "2006-06-27"
+    },
+    {
+      "artist": "moe.",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0005",
+      "date": "2007-02-10"
+    },
+    {
+      "artist": "Dispatch",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0006",
+      "date": "2007-07-14"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "special_notes": "Yogurt",
+      "id": "seed-0007",
+      "date": "2007-08-07"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0008",
+      "date": "2007-08-08"
+    },
+    {
+      "artist": "O.A.R.",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0009",
+      "date": "2007-08-18"
+    },
+    {
+      "artist": "Explosions in the Sky",
+      "venue": "Trocadero",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-000a",
+      "date": "2008-04-10"
+    },
+    {
+      "artist": "Bruce Springsteen",
+      "venue": "Unknown",
+      "event": "Rock the Vote",
+      "special_notes": "solo acoustic",
+      "id": "seed-000b",
+      "date": "2008-10-04"
+    },
+    {
+      "artist": "Kanye West",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-000c",
+      "date": "2008-05-17"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-000d",
+      "date": "2008-06-03"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-000e",
+      "date": "2008-06-04"
+    },
+    {
+      "artist": "Pearl Jam",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-000f",
+      "date": "2008-06-19"
+    },
+    {
+      "artist": "Pearl Jam",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0010",
+      "date": "2008-06-20"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "Hersheypark Stadium",
+      "city": "Hershey",
+      "state": "PA",
+      "id": "seed-0011",
+      "date": "2008-06-27"
+    },
+    {
+      "artist": "Allman Brothers Band",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0012",
+      "date": "2009-08-21"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0013",
+      "date": "2009-09-22"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "special_notes": "Halloween",
+      "id": "seed-0014",
+      "date": "2009-09-23"
+    },
+    {
+      "artist": "Pearl Jam",
+      "venue": "Wells Fargo",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0015",
+      "date": "2009-10-30"
+    },
+    {
+      "artist": "Pearl Jam",
+      "venue": "Wells Fargo",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0016",
+      "date": "2009-10-31"
+    },
+    {
+      "artist": "Haakon's Fault",
+      "venue": "West Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0017",
+      "date": "2009/2010"
+    },
+    {
+      "artist": "Rodrigo y Gabriela",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "special_notes": "Started playing guitar after this show",
+      "id": "seed-0018",
+      "date": "2010-04-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0019",
+      "date": "2010-06-24"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "special_notes": "Bonnaroo Headliner Set",
+      "id": "seed-001a",
+      "date": "2010-06-13"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Unknown",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-001b",
+      "date": "2010-06-10"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "Penn's Landing",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-001c",
+      "date": "2010-08-29"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-001d",
+      "date": "2011-01-01"
+    },
+    {
+      "artist": "Phish",
+      "venue": "PNC Bank Arts Center",
+      "city": "Holmdel",
+      "state": "NJ",
+      "id": "seed-001e",
+      "date": "2011-06-01"
+    },
+    {
+      "artist": "Phish",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-001f",
+      "date": "2011-06-10"
+    },
+    {
+      "artist": "Dispatch",
+      "venue": "Bryce Jordan Center",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0020",
+      "date": "2011-08-28"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Stage AE",
+      "city": "Pittsburgh",
+      "state": "PA",
+      "id": "seed-0021",
+      "date": "2011-10-28"
+    },
+    {
+      "artist": "STS9",
+      "venue": "The State Theatre",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0022",
+      "date": "2011-10-26"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "State Theatre",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0023",
+      "date": "2011-11-29"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Festival Pier",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0024",
+      "date": "2011-12-31"
+    },
+    {
+      "artist": "Big Gigantic",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0025",
+      "date": "2012-02-18"
+    },
+    {
+      "artist": "EOTO",
+      "venue": "State Theatre",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0026",
+      "date": "2012-04-19"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "State Theatre",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0027",
+      "date": "2012-02-08"
+    },
+    {
+      "artist": "Red Hot Chili Peppers",
+      "venue": "Wells Fargo",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0028",
+      "date": "2012-05-11"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Bader Field",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-0029",
+      "date": "2012-06-15"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Bader Field",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-002a",
+      "date": "2012-06-16"
+    },
+    {
+      "artist": "Furthur",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-002b",
+      "date": "2012-07-07"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Outside, Ended early because of storm, walked back to Temple",
+      "id": "seed-002c",
+      "date": "2012-06-29"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-002d",
+      "date": "2012-08-17"
+    },
+    {
+      "artist": "Brother's Past",
+      "venue": "Trocadero",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-002e",
+      "date": "2012-12-31"
+    },
+    {
+      "artist": "Papadosio",
+      "venue": "Trocadero",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-002f",
+      "date": "2012-12-30"
+    },
+    {
+      "artist": "Dave Matthews Band",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-0030",
+      "date": "2013-06-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-0031",
+      "date": "2013-07-05"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-0032",
+      "date": "2013-07-06"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-0033",
+      "date": "2013-07-07"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "event": "Virgin Mobile FreeFest",
+      "id": "seed-0034",
+      "date": "2013-09-21"
+    },
+    {
+      "artist": "Arctic Monkeys",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0035",
+      "date": "2013-09-18"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Santander Arena",
+      "city": "Reading",
+      "state": "PA",
+      "id": "seed-0036",
+      "date": "2013-10-29"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Boardwalk Hall",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-0037",
+      "date": "2013-11-01"
+    },
+    {
+      "artist": "Tedeschi Trucks",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "id": "seed-0038",
+      "date": "2013-12-"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Franklin Music Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0039",
+      "date": "2013-12-30"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Franklin Music Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-003a",
+      "date": "2013-12-31"
+    },
+    {
+      "artist": "Allman Brothers Band",
+      "venue": "Unknown",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "special_notes": "Slept in van",
+      "id": "seed-003b",
+      "date": "2013-08-17"
+    },
+    {
+      "artist": "The Disco Biscuits",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-003c",
+      "date": "2014-02-22"
+    },
+    {
+      "artist": "Turkuaz",
+      "venue": "The North Star Bar",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-003d",
+      "date": "2014-04-04"
+    },
+    {
+      "artist": "The Motet",
+      "venue": "The North Star Bar",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-003e",
+      "date": "2014-06-17"
+    },
+    {
+      "artist": "Widespread Panic",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-003f",
+      "date": "2014-06-14"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-0040",
+      "date": "2014-07-03"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "special_notes": "Independence Day",
+      "id": "seed-0041",
+      "date": "2014-07-04"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-0042",
+      "date": "2014-07-05"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0043",
+      "date": "2014-07-08"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0044",
+      "date": "2014-07-09"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Randall's Island",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0045",
+      "date": "2014-07-12"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "id": "seed-0046",
+      "date": "2014-07-26"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "id": "seed-0047",
+      "date": "2014-07-27"
+    },
+    {
+      "artist": "Moon Taxi",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0048",
+      "date": "2014-08-05"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "Tower Theater",
+      "city": "Upper Darby",
+      "state": "PA",
+      "id": "seed-0049",
+      "date": "2014-08-09"
+    },
+    {
+      "artist": "Dopapod & Umphrey's McGee",
+      "venue": "Tower Theatre",
+      "city": "Upper Darby",
+      "state": "PA",
+      "id": "seed-004a",
+      "date": "2014-08-09"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Stand by Steve show",
+      "id": "seed-004b",
+      "date": "2014-12-29"
+    },
+    {
+      "artist": "Disco Biscuits",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "City Bisco",
+      "id": "seed-004c",
+      "date": "2014-09-27"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Putnam Den",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "special_notes": "Post Phish SPAC",
+      "id": "seed-004d",
+      "date": "2014-07-05"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Silk City",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "with Sean, Fall 2014",
+      "id": "seed-004e",
+      "date": "2014-09-03"
+    },
+    {
+      "artist": "Ludovico Einaudi",
+      "venue": "Skirball Center",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-004f",
+      "date": "2014-11-14"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0050",
+      "date": "2014-12-27"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "Tower Theatre",
+      "city": "Upper Darby",
+      "state": "PA",
+      "id": "seed-0051",
+      "date": "2014-12-13"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Unknown",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "special_notes": "Slept in RV",
+      "id": "seed-0052",
+      "date": "2014-08-14"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Unknown",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "special_notes": "Slept in RV",
+      "id": "seed-0053",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Unknown",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "special_notes": "Slept in RV",
+      "id": "seed-0054",
+      "date": "2014-08-16"
+    },
+    {
+      "artist": "Control For Smilers",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-0055",
+      "date": "2015-03-20"
+    },
+    {
+      "artist": "Ex Hex",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0056",
+      "date": "2015-04-26"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Penn's Landing Concert Stage",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Jam On the River",
+      "id": "seed-0057",
+      "date": "2015-05-16"
+    },
+    {
+      "artist": "The Replacements",
+      "venue": "Penn's Landing Concert Stage",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0058",
+      "date": "2015-05-09"
+    },
+    {
+      "artist": "Philadelphia Orchestra",
+      "venue": "Verizon Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0059",
+      "date": "2015-06-30"
+    },
+    {
+      "artist": "Umphrey's McGee with Lettuce",
+      "venue": "Penn's Landing",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-005a",
+      "date": "2015-07-18"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-005b",
+      "date": "2015-08-11"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-005c",
+      "date": "2015-08-12"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Watkins Glen International",
+      "city": "Watkins Glen",
+      "state": "NY",
+      "special_notes": "Magnaball",
+      "id": "seed-005d",
+      "date": "2015-08-22"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Watkins Glen International",
+      "city": "Watkins Glen",
+      "state": "NY",
+      "special_notes": "Magnaball",
+      "id": "seed-005e",
+      "date": "2015-08-23"
+    },
+    {
+      "artist": "Chris Robinson Brotherhood",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Went to the eagles game and then the show for free. the guy at the ticketbooth gave me a comped ticket. nice guy. fun day.",
+      "id": "seed-005f",
+      "date": "2015-11-22"
+    },
+    {
+      "artist": "moe.",
+      "venue": "Fillmore Philly",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Star Wars Show",
+      "id": "seed-0060",
+      "date": "2015-10-31"
+    },
+    {
+      "artist": "moe. & Pigeons Playing Ping Pong",
+      "venue": "Rams Head",
+      "city": "Baltimore",
+      "state": "MD",
+      "special_notes": "maybe",
+      "id": "seed-0061",
+      "date": "2015-10-30"
+    },
+    {
+      "artist": "Surfer Blood",
+      "venue": "Johnny Brenda's",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0062",
+      "date": "2015"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "State Theatre",
+      "city": "State College",
+      "state": "PA",
+      "special_notes": "with meg and mike",
+      "id": "seed-0063",
+      "date": "2016-02-06"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-0064",
+      "date": "2015-12-19"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "New Year's Day",
+      "id": "seed-0065",
+      "date": "2016-01-01"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0066",
+      "date": "2016-01-02"
+    },
+    {
+      "artist": "New Mastersounds /Turkuaz",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0067",
+      "date": "2016-12-10"
+    },
+    {
+      "artist": "Spafford",
+      "venue": "Milkboy",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0068",
+      "date": "2017-01-24"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0069",
+      "date": "2016-06-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-006a",
+      "date": "2016-06-29"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-006b",
+      "date": "2016-07-01"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-006c",
+      "date": "2016-07-02"
+    },
+    {
+      "artist": "Phish",
+      "venue": "SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "id": "seed-006d",
+      "date": "2016-07-03"
+    },
+    {
+      "artist": "Claypool Lennon Delirium",
+      "venue": "Fillmore Philly",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-006e",
+      "date": "2016-08-31"
+    },
+    {
+      "artist": "Les Brers",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-006f",
+      "date": "2016-10-14"
+    },
+    {
+      "artist": "Dopapod",
+      "venue": "Irving Plaza",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "CEG & L4LM Present",
+      "id": "seed-0070",
+      "date": "2016-11-18"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Irving Plaza",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "CEG & L4LM Present",
+      "id": "seed-0071",
+      "date": "2016-11-18"
+    },
+    {
+      "artist": "Mike Gordon Band",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "approximate date",
+      "id": "seed-0072",
+      "date": "2016-11-28"
+    },
+    {
+      "artist": "Guided By Voices",
+      "venue": "Underground Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0073",
+      "date": "2016-12-30"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Franklin Music Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "XPN Welcomes",
+      "id": "seed-0074",
+      "date": "2016-12-29"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Theatre of Living Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0075",
+      "date": "2016-12-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "New Year's Eve",
+      "id": "seed-0076",
+      "date": "2016-12-31"
+    },
+    {
+      "artist": "Red Hot Chili Peppers",
+      "venue": "Wells Fargo Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0077",
+      "date": "2017-02-12"
+    },
+    {
+      "artist": "The Werks",
+      "venue": "The Foundry",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0078",
+      "date": "2017-02-10"
+    },
+    {
+      "artist": "Dopapod",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0079",
+      "date": "2017-03-31"
+    },
+    {
+      "artist": "Dopapod",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-007a",
+      "date": "2017-04-01"
+    },
+    {
+      "artist": "Sheer Mag",
+      "venue": "First Unitarian Church",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-007b",
+      "date": "2017-05-16"
+    },
+    {
+      "artist": "Sheer Mag",
+      "venue": "First Unitarian Church",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "With Jimmy, Tina, & Mike Arch",
+      "id": "seed-007c",
+      "date": "2017-05-13"
+    },
+    {
+      "artist": "GWAR",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-007d",
+      "date": "2017-06-01"
+    },
+    {
+      "artist": "Awakenings",
+      "venue": "Amsterdam",
+      "city": "Amsterdam",
+      "state": "Netherlands",
+      "id": "seed-007e",
+      "date": "2017-06"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-007f",
+      "date": "2017-07-22"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0080",
+      "date": "2017-08-02"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Kev Merlini 2017",
+      "id": "seed-0081",
+      "date": "2017"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "with Howard and friends",
+      "id": "seed-0082",
+      "date": "2017"
+    },
+    {
+      "artist": "Thundercat",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0083",
+      "date": "2017-09"
+    },
+    {
+      "artist": "Haakon's Fault",
+      "venue": "The Bitter End",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "Winter 2017",
+      "id": "seed-0084",
+      "date": "2017"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Irving Plaza",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "Winter 2017",
+      "id": "seed-0085",
+      "date": "2017"
+    },
+    {
+      "artist": "Matisyahu, Common Kings & Orphan",
+      "venue": "Theatre of Living Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "The Broken Crowns Tour",
+      "id": "seed-0086",
+      "date": "2017-12-16"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Theatre of Living Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0087",
+      "date": "2017-12-08"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "Beacon Theatre",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0088",
+      "date": "2018-01-20"
+    },
+    {
+      "artist": "Chicago Bulls at Philadelphia 76ers",
+      "venue": "Wells Fargo Center-PA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0089",
+      "date": "2018-01-24"
+    },
+    {
+      "artist": "Ray LaMontagne & Neko Case",
+      "venue": "Festival Pier",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-008a",
+      "date": "2018-06-22"
+    },
+    {
+      "artist": "Spafford",
+      "venue": "The Foundry",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "approximate date",
+      "id": "seed-008b",
+      "date": "2018"
+    },
+    {
+      "artist": "Phish",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-008c",
+      "date": "2018-08-07"
+    },
+    {
+      "artist": "Phish",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-008d",
+      "date": "2018-08-08"
+    },
+    {
+      "artist": "Childish Gambino",
+      "venue": "Wells Fargo",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-008e",
+      "date": "2018-09-18"
+    },
+    {
+      "artist": "Phish",
+      "venue": "MVP Arena",
+      "city": "Albany",
+      "state": "NY",
+      "id": "seed-008f",
+      "date": "2018-10-17"
+    },
+    {
+      "artist": "String Cheese Incident",
+      "venue": "Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0090",
+      "date": "2018-10-31"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0091",
+      "date": "2018-12-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-0092",
+      "date": "2018-12-29"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "New Year's Eve",
+      "id": "seed-0093",
+      "date": "2018-12-31"
+    },
+    {
+      "artist": "Ghost Light",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0094",
+      "date": "2019-08-03"
+    },
+    {
+      "artist": "Vida Blue",
+      "venue": "Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0095",
+      "date": "2019-09-20"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0096",
+      "date": "2019-11-02"
+    },
+    {
+      "artist": "Pure Cane Sugar",
+      "venue": "Zeno's",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-0097",
+      "date": "2019-05-04"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Winter 2019",
+      "id": "seed-0098",
+      "date": "2019"
+    },
+    {
+      "artist": "The Mavericks",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "id": "seed-0099",
+      "date": "2021-12"
+    },
+    {
+      "artist": "Southside Johnny & The Asbury Jukes",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "id": "seed-009a",
+      "date": "2021-11"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Hersheypark Stadium",
+      "city": "Hershey",
+      "state": "PA",
+      "id": "seed-009b",
+      "date": "2021-08-10"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Hersheypark Stadium",
+      "city": "Hershey",
+      "state": "PA",
+      "id": "seed-009c",
+      "date": "2021-08-11"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-009d",
+      "date": "2021-08-13"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-009e",
+      "date": "2021-08-14"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-009f",
+      "date": "2021-08-15"
+    },
+    {
+      "artist": "Tedeschi Trucks",
+      "venue": "Freedom Mortgage Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Xponential Music Festival",
+      "special_notes": "XPN Welcomes",
+      "id": "seed-00a0",
+      "date": "2021-09-18"
+    },
+    {
+      "artist": "Phoebe Bridgers",
+      "venue": "Mann Skyline Stage",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00a1",
+      "date": "2021-09-22"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "Mann Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00a2",
+      "date": "2021-09-08"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00a3",
+      "date": "2021-09"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "The Met Presented by Highmark",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00a4",
+      "date": "2021-09-21"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "Radio City Music Hall",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00a5",
+      "date": "2021-10-03"
+    },
+    {
+      "artist": "Dr. Dog",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Last Tour",
+      "id": "seed-00a6",
+      "date": "2021-12-30"
+    },
+    {
+      "artist": "Dr. Dog",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Last Tour",
+      "id": "seed-00a7",
+      "date": "2021-12-31"
+    },
+    {
+      "artist": "Dr. Dog",
+      "venue": "Theatre of Living Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Last Tour",
+      "id": "seed-00a8",
+      "date": "2021-12-29"
+    },
+    {
+      "artist": "Allman Family Revival",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00a9",
+      "date": "2021-12-09"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "Citizens Bank Park",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Summer 2021",
+      "id": "seed-00aa",
+      "date": "2021-08-21"
+    },
+    {
+      "artist": "The War On Drugs",
+      "venue": "The Met Presented by Highmark",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "An Evening of LIVE DRUGS",
+      "special_notes": "WXPN Welcomes",
+      "id": "seed-00ab",
+      "date": "2022-01-27"
+    },
+    {
+      "artist": "Joe Russo's Almost Dead",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ac",
+      "date": "2022-02-12"
+    },
+    {
+      "artist": "Khruangbin",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Spring 2022, saw Dave at the show and started taking lessons shortly after.",
+      "id": "seed-00ad",
+      "date": "2022-03-19"
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "venue": "Franklin Music Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ae",
+      "date": "2022-03-29"
+    },
+    {
+      "artist": "LCD Soundsystem",
+      "venue": "Franklin Music Hall",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00af",
+      "date": "2022-03-30"
+    },
+    {
+      "artist": "Goose",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00b0",
+      "date": "2022-03-11"
+    },
+    {
+      "artist": "Goose",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00b1",
+      "date": "2022-03-12"
+    },
+    {
+      "artist": "Eric Krasno & Son Little",
+      "venue": "Brooklyn Bowl Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00b2",
+      "date": "2022-05-13"
+    },
+    {
+      "artist": "Infamous Stringdusters, California Honeydrops, Karina Rykman",
+      "venue": "Red Rocks",
+      "city": "Morrison",
+      "state": "CO",
+      "id": "seed-00b3",
+      "date": "2022-05-26"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Radio City Music Hall",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00b4",
+      "date": "2022-06-24"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Radio City Music Hall",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00b5",
+      "date": "2022-06-25"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "Bethel Woods Center for the Arts",
+      "city": "Bethel",
+      "state": "NY",
+      "id": "seed-00b6",
+      "date": "2022-07-01"
+    },
+    {
+      "artist": "Tedeschi Trucks Band",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Wheels Of Soul 2022",
+      "special_notes": "XPN Welcomes",
+      "id": "seed-00b7",
+      "date": "2022-07-08"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "Citizens Bank Park",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00b8",
+      "date": "2022-07-10"
+    },
+    {
+      "artist": "Phish",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "2 Day Pass",
+      "id": "seed-00b9",
+      "date": "2022-07-19"
+    },
+    {
+      "artist": "Phish",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ba",
+      "date": "2022-07-20"
+    },
+    {
+      "artist": "Jack White",
+      "venue": "Ommegang Brewery",
+      "city": "Cooperstown",
+      "state": "NY",
+      "special_notes": "no phone show",
+      "id": "seed-00bb",
+      "date": "2018-05-27"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-00bc",
+      "date": "2022-08-05"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-00bd",
+      "date": "2022-08-06"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Atlantic City Beach",
+      "city": "Atlantic City",
+      "state": "NJ",
+      "id": "seed-00be",
+      "date": "2022-08-07"
+    },
+    {
+      "artist": "Marcus King",
+      "venue": "The Met Presented by Highmark",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Young Blood",
+      "special_notes": "WXPN Welcomes, with Neal Francis",
+      "id": "seed-00bf",
+      "date": "2022-09-09"
+    },
+    {
+      "artist": "Chris Rock",
+      "venue": "The Met Presented by Highmark",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Ego Death World Tour 2022",
+      "id": "seed-00c0",
+      "date": "2022-09-23"
+    },
+    {
+      "artist": "Philadelphia Orchestra",
+      "venue": "Kimmel Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "NYE 2022-2023",
+      "special_notes": "late afternoon show, then had dinner at ",
+      "id": "seed-00c1",
+      "date": "2022-12-31"
+    },
+    {
+      "artist": "The Breeders",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00c2",
+      "date": "2023-09-20"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "XL Live",
+      "city": "Harrisburg",
+      "state": "PA",
+      "id": "seed-00c3",
+      "date": "2023-03-04"
+    },
+    {
+      "artist": "Headhunters",
+      "venue": "Brooklyn Bowl Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Winter 2023?",
+      "id": "seed-00c4",
+      "date": "2023-02-11"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "Citizens Bank Park",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "Summer 2023",
+      "id": "seed-00c5",
+      "date": "2023-06-15"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "Bethel Woods",
+      "city": "Bethel",
+      "state": "NY",
+      "special_notes": "Summer 2023",
+      "id": "seed-00c6",
+      "date": "2023-07-01"
+    },
+    {
+      "artist": "Saint Paul and The Broken Bones",
+      "venue": "The Fillmore Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00c7",
+      "date": "2024-02-24"
+    },
+    {
+      "artist": "Khruangbin",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00c8",
+      "date": "2024"
+    },
+    {
+      "artist": "Sturgill Simpson",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00c9",
+      "date": "2024-11-17"
+    },
+    {
+      "artist": "King Gizzard and the Lizard Wizard",
+      "venue": "Dell Music Center",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ca",
+      "date": "2024-08-27"
+    },
+    {
+      "artist": "Tedeschi Trucks Band",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "WXPN Welcomes",
+      "id": "seed-00cb",
+      "date": "2024-08-28"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Broadview Stage at SPAC",
+      "city": "Saratoga Springs",
+      "state": "NY",
+      "event": "An Evening With Goose",
+      "id": "seed-00cc",
+      "date": "2024-09-07"
+    },
+    {
+      "artist": "Control for Smilers",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "special_notes": "approximate date",
+      "id": "seed-00cd",
+      "date": "2014"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Ram's Head Live",
+      "city": "Baltimore",
+      "state": "MD",
+      "id": "seed-00ce",
+      "date": "2016-02-26"
+    },
+    {
+      "artist": "Tedeschi Trucks Band",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "id": "seed-00cf",
+      "date": "2014-12-04"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "XL Live",
+      "city": "Harrisburg",
+      "state": "PA",
+      "id": "seed-00d0",
+      "date": "2016-04-03"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "XL Live",
+      "city": "Harrisburg",
+      "state": "PA",
+      "id": "seed-00d1",
+      "date": "2026-04-16"
+    },
+    {
+      "artist": "Jeff Austin Band",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00d2",
+      "date": "2015-03-05"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00d3",
+      "date": "2013-12-28"
+    },
+    {
+      "artist": "Phish",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-00d4",
+      "date": "2019-06-30"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00d5",
+      "date": "2022-04-21"
+    },
+    {
+      "artist": "Phish",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "id": "seed-00d6",
+      "date": "2022-04-23"
+    },
+    {
+      "artist": "Phish",
+      "venue": "The Woodlands",
+      "city": "Dover",
+      "state": "DE",
+      "id": "seed-00d7",
+      "date": "2024-08-17"
+    },
+    {
+      "artist": "Phish",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00d8",
+      "date": "2025-07-16"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Santander Arena",
+      "city": "Reading",
+      "state": "PA",
+      "id": "seed-00d9",
+      "date": "2022-11-19"
+    },
+    {
+      "artist": "Goose",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00da",
+      "date": "2023-03-24"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Mann Center for the Performing Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00db",
+      "date": "2024-06-28"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Constellation Brands-Marvin Sands Performing Arts Center",
+      "city": "Canandaigua",
+      "state": "NY",
+      "id": "seed-00dc",
+      "date": "2025-06-21"
+    },
+    {
+      "artist": "Goose",
+      "venue": "Mann Center for the Performing Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00dd",
+      "date": "2025-10-04"
+    },
+    {
+      "artist": "Dispatch",
+      "venue": "Madison Square Garden",
+      "city": "New York",
+      "state": "NY",
+      "event": "Zimbabwe",
+      "id": "seed-00de",
+      "date": "2007-07-15"
+    },
+    {
+      "artist": "The New Deal",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00df",
+      "date": "2011-12-28"
+    },
+    {
+      "artist": "DrFaemus",
+      "venue": "The Blockley",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e0",
+      "date": "2011-10-02"
+    },
+    {
+      "artist": "Splintered Sunlight",
+      "venue": "The Blockley",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e1",
+      "date": "2012-08-02"
+    },
+    {
+      "artist": "Jack Johnson & G. Love",
+      "venue": "Eisenhower Auditorium",
+      "city": "State College",
+      "state": "PA",
+      "id": "seed-00e2",
+      "date": "2012-09-19"
+    },
+    {
+      "artist": "Lettuce",
+      "venue": "The Blockley",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e3",
+      "date": "2013-05-13"
+    },
+    {
+      "artist": "Boombox",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e4",
+      "date": "2014-03-14"
+    },
+    {
+      "artist": "The Blurry Knights",
+      "venue": "Silk City",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e5",
+      "date": "2015-11-18"
+    },
+    {
+      "artist": "Ghost Light",
+      "venue": "TLA",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00e6",
+      "date": "2020-01-16"
+    },
+    {
+      "artist": "L.A. Witch & The Buttertones",
+      "venue": "The Workman's Club",
+      "city": "Dublin",
+      "state": "Ireland",
+      "id": "seed-00e7",
+      "date": "2025-09-20"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00e8",
+      "date": "2022-10-21"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00e9",
+      "date": "2023-10-19"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00ea",
+      "date": "2024-10-20"
+    },
+    {
+      "artist": "Daniel Donato's Cosmic Country",
+      "venue": "Ardmore Music Hall",
+      "city": "Ardmore",
+      "state": "PA",
+      "id": "seed-00eb",
+      "date": "2025-10-18"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "with Josh",
+      "id": "seed-00ec",
+      "date": "2025-10-11"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ed",
+      "date": "2025-10-27"
+    },
+    {
+      "artist": "My Morning Jacket",
+      "venue": "The Met",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "with Josh",
+      "id": "seed-00ee",
+      "date": "2025-10-28"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00ef",
+      "date": "2011-07-14"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f0",
+      "date": "2011-07-15"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f1",
+      "date": "2011-07-16"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f2",
+      "date": "2011-07-17"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-00f3",
+      "date": "2012-07-19"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f4",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f5",
+      "date": "2015-07-10"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-00f6",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-00f7",
+      "date": "2012-07-20"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-00f8",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-00f9",
+      "date": "2012-07-22"
+    },
+    {
+      "artist": "Tedeschi Trucks Band",
+      "venue": "TD Pavilion at the Mann",
+      "city": "Philadelphia",
+      "state": "PA",
+      "special_notes": "with Little Feat",
+      "id": "seed-00fa",
+      "date": "2024-08-24"
+    },
+    {
+      "artist": "Dead & Company",
+      "venue": "BB&T Pavilion",
+      "city": "Camden",
+      "state": "NJ",
+      "id": "seed-00fb",
+      "date": "2019-06-20"
+    },
+    {
+      "artist": "Josh Ritter",
+      "venue": "Keswick Theatre",
+      "city": "Glenside",
+      "state": "PA",
+      "id": "seed-00fc",
+      "date": "2019-05-14"
+    },
+    {
+      "artist": "White Denim",
+      "venue": "Brooklyn Bowl Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00fd",
+      "date": "2024-02-23"
+    },
+    {
+      "artist": "White Denim",
+      "venue": "Brooklyn Bowl Philadelphia",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00fe",
+      "date": "2025-07-17"
+    },
+    {
+      "artist": "Mike Gordon",
+      "venue": "Union Transfer",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-00ff",
+      "date": "2015-06-28"
+    },
+    {
+      "artist": "Local Natives",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0100",
+      "date": "2010-06-10"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0101",
+      "date": "2010-06-10"
+    },
+    {
+      "artist": "Margaret Cho",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0102",
+      "date": "2010-06-10"
+    },
+    {
+      "artist": "Edward Sharpe and the Magnetic Zeros",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0103",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Kings of Leon",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0104",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Nas & Damian Marley",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0105",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Tenacious D",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0106",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "The Disco Biscuits",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0107",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "The Flaming Lips",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0108",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0109",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Greg Giraldo",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010a",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "Jay-Z",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010b",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "Stevie Wonder",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010c",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "The Dead Weather",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010d",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "Weezer",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010e",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "John Butler Trio",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-010f",
+      "date": "2010-06-13"
+    },
+    {
+      "artist": "John Fogerty",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-0110",
+      "date": "2010-06-13"
+    },
+    {
+      "artist": "John Butler Trio",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0111",
+      "date": "2011-07-14"
+    },
+    {
+      "artist": "Big Gigantic",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0112",
+      "date": "2011-07-15"
+    },
+    {
+      "artist": "Furthur",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0113",
+      "date": "2011-07-15"
+    },
+    {
+      "artist": "Umphrey's McGee",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0114",
+      "date": "2011-07-15"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0115",
+      "date": "2011-07-16"
+    },
+    {
+      "artist": "moe.",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0116",
+      "date": "2011-07-16"
+    },
+    {
+      "artist": "Pretty Lights",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0117",
+      "date": "2011-07-16"
+    },
+    {
+      "artist": "Primus",
+      "venue": "Marvin's Mountaintop",
+      "city": "Masontown",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0118",
+      "date": "2011-07-16"
+    },
+    {
+      "artist": "Bob Weir & Bruce Hornsby feat. Branford Marsalis",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-0119",
+      "date": "2012-07-19"
+    },
+    {
+      "artist": "Phil Lesh & Friends",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011a",
+      "date": "2012-07-19"
+    },
+    {
+      "artist": "Shpongle",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011b",
+      "date": "2012-07-19"
+    },
+    {
+      "artist": "Elephant Revival",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011c",
+      "date": "2012-07-20"
+    },
+    {
+      "artist": "The Flaming Lips",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011d",
+      "date": "2012-07-20"
+    },
+    {
+      "artist": "The Allman Brothers Band",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011e",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Big Gigantic",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-011f",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-0120",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Lettuce",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-0121",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Legend Valley",
+      "city": "Thornville",
+      "state": "OH",
+      "event": "All Good Music Festival",
+      "id": "seed-0122",
+      "date": "2012-07-21"
+    },
+    {
+      "artist": "Greensky Bluegrass",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0123",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "John Butler Trio",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0124",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "moe.",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0125",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "STS9",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0126",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "The Motet",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0127",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "Twiddle",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0128",
+      "date": "2015-07-09"
+    },
+    {
+      "artist": "Joe Russo's Almost Dead",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0129",
+      "date": "2015-07-10"
+    },
+    {
+      "artist": "Lettuce",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012a",
+      "date": "2015-07-10"
+    },
+    {
+      "artist": "Primus",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012b",
+      "date": "2015-07-10"
+    },
+    {
+      "artist": "Turkuaz",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012c",
+      "date": "2015-07-10"
+    },
+    {
+      "artist": "CAKE",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012d",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "Dark Star Orchestra",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012e",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-012f",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0130",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "The Bridge",
+      "venue": "Summit Point Motorsports Park",
+      "city": "Summit Point",
+      "state": "WV",
+      "event": "All Good Music Festival",
+      "id": "seed-0131",
+      "date": "2015-07-11"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0132",
+      "date": "2013-08-17"
+    },
+    {
+      "artist": "Ratdog",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0133",
+      "date": "2013-08-17"
+    },
+    {
+      "artist": "Big Gigantic",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0134",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Joe Russo's Almost Dead",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0135",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Tedeschi Trucks Band",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0136",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0137",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Victor Wooten",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0138",
+      "date": "2014-08-15"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-0139",
+      "date": "2014-08-16"
+    },
+    {
+      "artist": "Pigeons Playing Ping Pong",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-013a",
+      "date": "2014-08-16"
+    },
+    {
+      "artist": "The Allman Brothers Band",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-013b",
+      "date": "2014-08-16"
+    },
+    {
+      "artist": "Trey Anastasio Band",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-013c",
+      "date": "2014-08-16"
+    },
+    {
+      "artist": "CHVRCHES",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "event": "Virgin Mobile FreeFest",
+      "id": "seed-013d",
+      "date": "2013-09-21"
+    },
+    {
+      "artist": "Little Green Cars",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "event": "Virgin Mobile FreeFest",
+      "id": "seed-013e",
+      "date": "2013-09-21"
+    },
+    {
+      "artist": "Pretty Lights",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "event": "Virgin Mobile FreeFest",
+      "id": "seed-013f",
+      "date": "2013-09-21"
+    },
+    {
+      "artist": "Robin Thicke",
+      "venue": "Merriweather Post Pavilion",
+      "city": "Columbia",
+      "state": "MD",
+      "event": "Virgin Mobile FreeFest",
+      "id": "seed-0140",
+      "date": "2013-09-21"
+    },
+    {
+      "artist": "Gov't Mule",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-0141",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "John Mellencamp",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-0142",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "Neil Young",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-0143",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "Robert Randolph",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-0144",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "Willie Nelson",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-0145",
+      "date": "2006-09-30"
+    },
+    {
+      "artist": "Lotus",
+      "venue": "Penn's Landing Concert Stage",
+      "city": "Philadelphia",
+      "state": "PA",
+      "event": "Jam On the River",
+      "id": "seed-0146",
+      "date": "2015-05-16"
+    },
+    {
+      "artist": "GWAR",
+      "venue": "Electric Factory",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0147",
+      "date": "2015-11-12"
+    },
+    {
+      "artist": "Budos Band",
+      "venue": "Underground Arts",
+      "city": "Philadelphia",
+      "state": "PA",
+      "id": "seed-0148",
+      "date": "2022-12-10"
+    },
+    {
+      "artist": "Nels Cline",
+      "venue": "Le Poisson Rouge",
+      "city": "New York",
+      "state": "NY",
+      "special_notes": "Wilco guitarist",
+      "id": "seed-0149",
+      "date": "2018-04-16"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-014a",
+      "date": "2010-06-11"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-014b",
+      "date": "2010-06-12"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Bonnaroo",
+      "city": "Manchester",
+      "state": "TN",
+      "event": "Bonnaroo",
+      "id": "seed-014c",
+      "date": "2010-06-13"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Montage Mountain",
+      "city": "Scranton",
+      "state": "PA",
+      "event": "Peach Music Festival",
+      "id": "seed-014d",
+      "date": "2013-08-17"
+    },
+    {
+      "artist": "Various Artists",
+      "venue": "Tweeter Center",
+      "city": "Camden",
+      "state": "NJ",
+      "event": "Farm Aid",
+      "id": "seed-014e",
+      "date": "2006-09-30"
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* WookBook — Oxblood + Bone + Brass. Editorial concert ledger.
+   All colors HSL. Bold, archival, zero AI gradient cliché. */
+
+@layer base {
+  :root {
+    /* Bone paper background, ink-black text, oxblood accent, brass highlight */
+    --background: 36 28% 92%;          /* warm bone */
+    --foreground: 0 0% 8%;              /* ink */
+
+    --card: 36 30% 96%;                 /* lighter bone */
+    --card-foreground: 0 0% 8%;
+
+    --popover: 36 30% 96%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 354 60% 28%;             /* deep oxblood */
+    --primary-foreground: 36 30% 96%;
+
+    --secondary: 36 20% 86%;
+    --secondary-foreground: 0 0% 8%;
+
+    --muted: 36 18% 84%;
+    --muted-foreground: 30 8% 38%;
+
+    --accent: 38 65% 42%;               /* burnished brass */
+    --accent-foreground: 36 30% 96%;
+
+    --destructive: 354 60% 28%;
+    --destructive-foreground: 36 30% 96%;
+
+    --border: 30 14% 72%;
+    --input: 30 14% 72%;
+    --ring: 354 60% 28%;
+
+    --radius: 0.125rem;
+
+    /* Sidebar — slightly darker bone with ink details */
+    --sidebar-background: 36 22% 88%;
+    --sidebar-foreground: 0 0% 12%;
+    --sidebar-primary: 354 60% 28%;
+    --sidebar-primary-foreground: 36 30% 96%;
+    --sidebar-accent: 36 20% 82%;
+    --sidebar-accent-foreground: 0 0% 8%;
+    --sidebar-border: 30 14% 68%;
+    --sidebar-ring: 354 60% 28%;
+
+    /* Custom tokens */
+    --ink: 0 0% 8%;
+    --bone: 36 28% 92%;
+    --bone-light: 36 30% 96%;
+    --oxblood: 354 60% 28%;
+    --oxblood-deep: 354 65% 18%;
+    --brass: 38 65% 42%;
+  }
+
+  .dark {
+    /* Dark mode: ink background, bone text, oxblood pops */
+    --background: 0 0% 7%;
+    --foreground: 36 24% 88%;
+    --card: 0 0% 10%;
+    --card-foreground: 36 24% 88%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 36 24% 88%;
+    --primary: 354 70% 48%;
+    --primary-foreground: 0 0% 7%;
+    --secondary: 0 0% 14%;
+    --secondary-foreground: 36 24% 88%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 36 12% 62%;
+    --accent: 38 75% 58%;
+    --accent-foreground: 0 0% 7%;
+    --destructive: 354 70% 48%;
+    --destructive-foreground: 0 0% 7%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 354 70% 48%;
+    --sidebar-background: 0 0% 9%;
+    --sidebar-foreground: 36 24% 88%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-border: 0 0% 18%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html, body, #root {
+    @apply bg-background text-foreground;
+    min-height: 100%;
+  }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: hsl(var(--background));
+    /* Subtle paper tint, no gradients */
+    background-image:
+      radial-gradient(circle at 20% 10%, hsl(36 24% 88%) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, hsl(36 20% 86%) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3, .font-display {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  .font-mono, code, kbd {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  ::selection {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+}
+
+@layer components {
+  .stub-divider {
+    background-image: repeating-linear-gradient(
+      90deg,
+      hsl(var(--ink) / 0.4) 0,
+      hsl(var(--ink) / 0.4) 4px,
+      transparent 4px,
+      transparent 10px
+    );
+    height: 1px;
+  }
+  .stub-divider-v {
+    background-image: repeating-linear-gradient(
+      0deg,
+      hsl(var(--border)) 0,
+      hsl(var(--border)) 4px,
+      transparent 4px,
+      transparent 10px
+    );
+    width: 1px;
+  }
+  .grain::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    z-index: 100;
+    mix-blend-mode: multiply;
+  }
+  .ink-rule {
+    border-bottom: 2px solid hsl(var(--ink));
+  }
+  .brass-rule {
+    border-bottom: 2px solid hsl(var(--accent));
+  }
+  /* Stamped serial-number look */
+  .stamp {
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-size: 10px;
+    color: hsl(var(--primary));
+  }
+}
