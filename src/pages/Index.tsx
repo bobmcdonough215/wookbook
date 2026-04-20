@@ -1,15 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+// src/pages/Index.tsx
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import rawData from "@/data/concerts.json";
 import { Concert, UpcomingItem } from "@/types/concert";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
-import { AuthModal } from "@/components/AuthModal";
-import { UsernameSetupModal } from "@/components/UsernameSetupModal";
-import { LogIn, LogOut } from "lucide-react";
-import { useLocalStorage } from "@/lib/storage";
+import { useArchive } from "@/hooks/useArchive";
+import { useUpcoming } from "@/hooks/useUpcoming";
+import { useWishlist } from "@/hooks/useWishlist";
+import { migrateLegacyLocalStorage } from "@/lib/migrateLegacyData";
+import { queryKeys } from "@/lib/queryKeys";
 import { useRecordings } from "@/hooks/useRecordings";
 import { useRecordingPlayer } from "@/hooks/useRecordingPlayer";
+import { AuthModal } from "@/components/AuthModal";
+import { LandingView } from "@/components/LandingView";
+import { UsernameSetupModal } from "@/components/UsernameSetupModal";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar, ViewKey } from "@/components/AppSidebar";
 import { ArchiveView } from "@/components/ArchiveView";
@@ -17,35 +22,33 @@ import { UpcomingView } from "@/components/UpcomingView";
 import { WishlistView } from "@/components/WishlistView";
 import { Stats } from "@/components/Stats";
 import { AudioPlayer } from "@/components/AudioPlayer";
-
-const seedConcerts: Concert[] = (rawData as { concerts: Concert[] }).concerts;
+import { LogIn, LogOut } from "lucide-react";
 
 const Index = () => {
-  const [extras, setExtras] = useLocalStorage<Concert[]>("wookbook:archive-extras", []);
-  const [upcoming] = useLocalStorage<UpcomingItem[]>("wookbook:upcoming", []);
-  const [wishlist] = useLocalStorage<{ id: string }[]>("wookbook:wishlist", []);
+  const queryClient = useQueryClient();
+  const { user, loading: authLoading, signOut } = useAuth();
+  const { needsUsernameSetup, profile } = useProfile();
+  const { concerts, loading: archiveLoading, saveAttendance } = useArchive();
+  const { items: upcomingItems, removeUpcoming } = useUpcoming();
+  const { items: wishlistItems } = useWishlist();
   const [view, setView] = useState<ViewKey>("archive");
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const { user, loading: authLoading, signOut } = useAuth();
-  const { needsUsernameSetup, profile } = useProfile();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  const all = useMemo(() => {
-    const map = new Map<string, Concert>();
-    seedConcerts.forEach((c) => map.set(c.id, c));
-    extras.forEach((c) => map.set(c.id, c));
-    return [...map.values()];
-  }, [extras]);
+  // ── One-time localStorage migration ───────────────────────────────────────────
+  // Runs on first login after Session D. The migration function is idempotent —
+  // it checks the migration flag and returns immediately on subsequent logins.
+  // After migration, invalidate the archive query to load the newly migrated data.
+  useEffect(() => {
+    if (!user) return;
+    migrateLegacyLocalStorage(user.id).then(() => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.archive(user.id) });
+    });
+  }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const globalStats = useMemo(() => ({
-    shows: all.length,
-    artists: new Set(all.map((c) => c.artist)).size,
-    venues: new Set(all.map((c) => c.venue).filter(Boolean)).size,
-    years: new Set(all.map((c) => c.date?.slice(0, 4)).filter(Boolean)).size,
-  }), [all]);
-
-  const { cache: recordingCache, hasRecording, fetchRecording } = useRecordings(all);
+  // ── Recording player ──────────────────────────────────────────────────────────
+  const { cache: recordingCache, hasRecording, fetchRecording } = useRecordings(concerts);
   const {
     currentTrack,
     isPlaying,
@@ -61,6 +64,7 @@ const Index = () => {
   useEffect(() => {
     if (audioError) toast.error(audioError);
   }, [audioError]);
+
   const [currentConcert, setCurrentConcert] = useState<Concert | null>(null);
   const [currentTracks, setCurrentTracks] = useState<import("@/types/recording").Track[]>([]);
 
@@ -80,20 +84,62 @@ const Index = () => {
       if (entry?.status === "found") setCurrentTracks(entry.tracks);
     }
   };
-  const handleDismiss = () => { dismiss(); setCurrentConcert(null); setCurrentTracks([]); };
+  const handleDismiss = () => {
+    dismiss();
+    setCurrentConcert(null);
+    setCurrentTracks([]);
+  };
 
-  // !!user guard is critical: TanStack Query keeps profile data in cache for
-  // gcTime (10 min) after sign-out. Without it, a logged-out user with a
-  // cached temp username would see this screen and hit "Not authenticated".
+  // ── Save concert (rating + memory) ───────────────────────────────────────────
+  const handleSaveConcert = useCallback((concert: Concert) => {
+    saveAttendance.mutate(
+      {
+        showId:       concert.id,
+        rating:       concert.rating,
+        memory:       concert.memory,
+        memoryPublic: concert.memory_public ?? false,
+      },
+      {
+        onSuccess: () => toast.success("Stub updated"),
+        onError: (e) =>
+          toast.error(e instanceof Error ? e.message : "Couldn't save changes"),
+      }
+    );
+  }, [saveAttendance]);
+
+  // ── Mark upcoming show as attended ────────────────────────────────────────────
+  // Removes from upcoming_shows. If the item has a showId, logs attendance.
+  // If not (manually added upcoming shows), just removes and prompts the user.
+  const handleAttend = useCallback((item: UpcomingItem) => {
+    removeUpcoming.mutate(item.id);
+    if (item.showId) {
+      saveAttendance.mutate({ showId: item.showId });
+    } else {
+      toast.success("Marked as attended. Find the show in your archive to rate it.");
+    }
+  }, [removeUpcoming, saveAttendance]);
+
+  // ── Global stats (computed from live archive data) ────────────────────────────
+  const globalStats = useMemo(() => ({
+    shows:   concerts.length,
+    artists: new Set(concerts.map((c) => c.artist)).size,
+    venues:  new Set(concerts.map((c) => c.venue).filter(Boolean)).size,
+    years:   new Set(concerts.map((c) => c.date?.slice(0, 4)).filter(Boolean)).size,
+  }), [concerts]);
+
+  // ── Auth gates ────────────────────────────────────────────────────────────────
+  // !!user guard on username check: TanStack Query caches profile data for gcTime
+  // (10 min) after sign-out. Without !!user, a signed-out user with a cached temp
+  // username would see the username setup screen.
   if (!authLoading && !!user && needsUsernameSetup) {
     return <UsernameSetupModal />;
   }
 
   const titleByView: Record<ViewKey, { eyebrow: string; title: string; sub: string }> = {
-    archive: { eyebrow: "Volume I", title: "The Archive", sub: "Every show, catalogued and dated." },
-    stats: { eyebrow: "Volume II", title: "By the Numbers", sub: "Patterns drawn from the ledger." },
-    upcoming: { eyebrow: "Volume III", title: "On the Horizon", sub: "Tickets in hand, dates circled." },
-    wishlist: { eyebrow: "Volume IV", title: "The Wishlist", sub: "Shows you'd cross a state line for." },
+    archive:  { eyebrow: "Volume I",   title: "The Archive",     sub: "Every show, catalogued and dated." },
+    stats:    { eyebrow: "Volume II",  title: "By the Numbers",  sub: "Patterns drawn from the ledger." },
+    upcoming: { eyebrow: "Volume III", title: "On the Horizon",  sub: "Tickets in hand, dates circled." },
+    wishlist: { eyebrow: "Volume IV",  title: "The Wishlist",    sub: "Shows you'd cross a state line for." },
   };
   const head = titleByView[view];
 
@@ -103,13 +149,13 @@ const Index = () => {
         <AppSidebar
           view={view}
           onView={(v) => { setView(v); if (v !== "archive") setSelectedArtist(null); }}
-          concerts={all}
+          concerts={concerts}
           selectedArtist={selectedArtist}
           onSelectArtist={(a) => { setSelectedArtist(a); setView("archive"); }}
           search={search}
           onSearch={setSearch}
-          upcomingCount={upcoming.length}
-          wishlistCount={wishlist.length}
+          upcomingCount={upcomingItems.length}
+          wishlistCount={wishlistItems.length}
         />
 
         <div className="flex flex-1 flex-col">
@@ -125,9 +171,7 @@ const Index = () => {
                   >
                     @{profile.username}
                   </button>
-                ) : (
-                  <div className="stamp">{all.length} stubs on file</div>
-                )}
+                ) : null}
                 {!authLoading && (
                   user ? (
                     <button
@@ -152,75 +196,84 @@ const Index = () => {
             </div>
           </header>
 
-          {/* Global stats strip */}
-          <div className="border-b-2 border-ink bg-card">
-            <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-6">
-              {[
-                { val: globalStats.shows, label: "Shows" },
-                { val: globalStats.artists, label: "Artists" },
-                { val: globalStats.venues, label: "Venues" },
-                { val: globalStats.years, label: "Years" },
-              ].map(({ val, label }) => (
-                <div key={label} className="flex flex-col items-center px-6 py-3 first:pl-0 last:pr-0">
-                  <span className="font-mono text-xl font-semibold leading-none">{val}</span>
-                  <span className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
+          {/* Logged-out users see the landing view */}
+          {!authLoading && !user ? (
+            <LandingView onSignIn={() => setShowAuthModal(true)} />
+          ) : (
+            <>
+              {/* Global stats strip — only shown when authenticated */}
+              {user && (
+                <div className="border-b-2 border-ink bg-card">
+                  <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-6">
+                    {[
+                      { val: globalStats.shows,   label: "Shows" },
+                      { val: globalStats.artists, label: "Artists" },
+                      { val: globalStats.venues,  label: "Venues" },
+                      { val: globalStats.years,   label: "Years" },
+                    ].map(({ val, label }) => (
+                      <div key={label} className="flex flex-col items-center px-6 py-3 first:pl-0 last:pr-0">
+                        <span className="font-mono text-xl font-semibold leading-none">{val}</span>
+                        <span className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <main className="flex-1 overflow-auto px-6 py-8">
-            <div className="mx-auto max-w-5xl space-y-8">
-              <div>
-                <div className="stamp">{head.eyebrow}</div>
-                <h1 className="mt-1 font-display text-5xl leading-none sm:text-6xl">
-                  {head.title}
-                </h1>
-                <p className="mt-3 max-w-xl text-muted-foreground italic">{head.sub}</p>
-                <div className="brass-rule mt-5" />
-              </div>
-
-              {view === "archive" && (
-                <ArchiveView
-                  concerts={all}
-                  extras={extras}
-                  onUpdateExtras={setExtras}
-                  selectedArtist={selectedArtist}
-                  onClearArtist={() => setSelectedArtist(null)}
-                  recordingCache={recordingCache}
-                  hasRecording={hasRecording}
-                  onFetchRecording={fetchRecording}
-                  currentTrack={currentTrack}
-                  isPlaying={isPlaying}
-                  onPlayTrack={handlePlay}
-                  onToggleTrack={handleToggle}
-                />
               )}
-              {view === "stats" && <Stats concerts={all} />}
-              {view === "upcoming" && <UpcomingView onAttend={(item) => {
-                const concert: Concert = {
-                  id:            item.id,
-                  artist:        item.artist,
-                  venue:         item.venue ?? "",
-                  city:          item.city ?? "",
-                  state:         item.state ?? "",
-                  date:          item.date,
-                  special_notes: item.notes,
-                };
-                setExtras([...extras, concert]);
-              }} />}
-              {view === "wishlist" && <WishlistView />}
-            </div>
-          </main>
 
-          <footer className={`border-t-2 border-ink px-6 py-4 ${currentTrack ? "pb-20" : ""}`}>
-            <div className="mx-auto flex max-w-5xl items-center justify-between">
-              <div className="stamp">WookBook · est. {new Date().getFullYear()}</div>
-              <div className="font-mono text-[10px] text-muted-foreground">
-                Pressed in oxblood &amp; bone
-              </div>
-            </div>
-          </footer>
+              <main className="flex-1 overflow-auto px-6 py-8">
+                <div className="mx-auto max-w-5xl space-y-8">
+                  <div>
+                    <div className="stamp">{head.eyebrow}</div>
+                    <h1 className="mt-1 font-display text-5xl leading-none sm:text-6xl">
+                      {head.title}
+                    </h1>
+                    <p className="mt-3 max-w-xl text-muted-foreground italic">{head.sub}</p>
+                    <div className="brass-rule mt-5" />
+                  </div>
+
+                  {/* Archive loading state — shown while Supabase query resolves */}
+                  {view === "archive" && archiveLoading && (
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <div
+                          key={i}
+                          className="h-28 animate-pulse rounded-sm border-2 border-ink bg-card opacity-50"
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {view === "archive" && !archiveLoading && (
+                    <ArchiveView
+                      concerts={concerts}
+                      onSaveConcert={handleSaveConcert}
+                      selectedArtist={selectedArtist}
+                      onClearArtist={() => setSelectedArtist(null)}
+                      recordingCache={recordingCache}
+                      hasRecording={hasRecording}
+                      onFetchRecording={fetchRecording}
+                      currentTrack={currentTrack}
+                      isPlaying={isPlaying}
+                      onPlayTrack={handlePlay}
+                      onToggleTrack={handleToggle}
+                    />
+                  )}
+                  {view === "stats"    && <Stats concerts={concerts} />}
+                  {view === "upcoming" && <UpcomingView onAttend={handleAttend} />}
+                  {view === "wishlist" && <WishlistView />}
+                </div>
+              </main>
+
+              <footer className={`border-t-2 border-ink px-6 py-4 ${currentTrack ? "pb-20" : ""}`}>
+                <div className="mx-auto flex max-w-5xl items-center justify-between">
+                  <div className="stamp">WookBook · est. {new Date().getFullYear()}</div>
+                  <div className="font-mono text-[10px] text-muted-foreground">
+                    Pressed in oxblood &amp; bone
+                  </div>
+                </div>
+              </footer>
+            </>
+          )}
         </div>
       </div>
 

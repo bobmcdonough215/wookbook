@@ -1,6 +1,9 @@
+// src/components/WishlistView.tsx
 import { useState } from "react";
-import { useLocalStorage, uid } from "@/lib/storage";
-import { UpcomingItem, WishlistItem } from "@/types/concert";
+import { toast } from "sonner";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useUpcoming } from "@/hooks/useUpcoming";
+import { WishlistItem } from "@/types/concert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,7 +14,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Heart, Trash2, ArrowRight } from "lucide-react";
-import { toast } from "sonner";
 
 const PRIORITY_LABELS: Record<WishlistItem["priority"], string> = {
   high:   "🔥 High priority",
@@ -20,49 +22,46 @@ const PRIORITY_LABELS: Record<WishlistItem["priority"], string> = {
 };
 
 export const WishlistView = () => {
-  const [items, setItems] = useLocalStorage<WishlistItem[]>("wookbook:wishlist", []);
-  const [, setUpcoming] = useLocalStorage<UpcomingItem[]>("wookbook:upcoming", []);
+  const { items, addWishlist, removeWishlist } = useWishlist();
+  const { addUpcoming } = useUpcoming();
   const [draft, setDraft] = useState<{
-    artist: string;
+    artist:   string;
     priority: WishlistItem["priority"];
-    notes: string;
-  }>({
-    artist:   "",
-    priority: "medium",
-    notes:    "",
-  });
+    notes:    string;
+  }>({ artist: "", priority: "medium", notes: "" });
 
-  const add = () => {
+  const add = async () => {
     if (!draft.artist.trim()) return;
-    setItems([
-      {
-        id:       uid(),
-        addedAt:  new Date().toISOString(),
+    try {
+      await addWishlist.mutateAsync({
         artist:   draft.artist.trim(),
         priority: draft.priority,
         notes:    draft.notes.trim() || undefined,
-      },
-      ...items,
-    ]);
-    setDraft({ artist: "", priority: "medium", notes: "" });
+      });
+      setDraft({ artist: "", priority: "medium", notes: "" });
+    } catch {
+      toast.error("Couldn't add to wishlist.");
+    }
   };
 
-  const remove = (id: string) =>
-    setItems(items.filter((i) => i.id !== id));
+  const remove = (id: string) => {
+    removeWishlist.mutate(id, {
+      onError: () => toast.error("Couldn't remove from wishlist."),
+    });
+  };
 
-  const promote = (it: WishlistItem) => {
-    setUpcoming((prev) => [
-      ...prev,
-      {
-        id:      uid(),
-        addedAt: new Date().toISOString(),
-        artist:  it.artist,
-        date:    new Date().toISOString().slice(0, 10),
-        notes:   it.notes,
-      },
-    ]);
-    remove(it.id);
-    toast.success(`${it.artist} moved to Upcoming`);
+  const promote = async (it: WishlistItem) => {
+    try {
+      await addUpcoming.mutateAsync({
+        artist: it.artist,
+        date:   new Date().toISOString().slice(0, 10),
+        notes:  it.notes,
+      });
+      remove(it.id);
+      toast.success(`${it.artist} moved to Upcoming`);
+    } catch {
+      toast.error("Couldn't move to upcoming.");
+    }
   };
 
   return (
@@ -100,7 +99,7 @@ export const WishlistView = () => {
         <Button
           className="mt-3"
           onClick={add}
-          disabled={!draft.artist.trim()}
+          disabled={!draft.artist.trim() || addWishlist.isPending}
         >
           <Heart className="h-4 w-4" /> Add to wishlist
         </Button>
@@ -116,9 +115,7 @@ export const WishlistView = () => {
               <div className="font-display text-xl">{it.artist}</div>
               <div className="stamp mt-0.5">{PRIORITY_LABELS[it.priority]}</div>
               {it.notes && (
-                <div className="mt-1 text-sm text-muted-foreground">
-                  {it.notes}
-                </div>
+                <div className="mt-1 text-sm text-muted-foreground">{it.notes}</div>
               )}
             </div>
             <div className="flex shrink-0 gap-1">
@@ -126,6 +123,7 @@ export const WishlistView = () => {
                 size="sm"
                 variant="outline"
                 onClick={() => promote(it)}
+                disabled={addUpcoming.isPending}
                 title="Move to upcoming"
               >
                 <ArrowRight className="h-4 w-4" />

@@ -1,5 +1,7 @@
+// src/components/UpcomingView.tsx
 import { useState } from "react";
-import { useLocalStorage, uid } from "@/lib/storage";
+import { toast } from "sonner";
+import { useUpcoming } from "@/hooks/useUpcoming";
 import { UpcomingItem, parseConcertDate } from "@/types/concert";
 import { StubCard } from "./StubCard";
 import { Button } from "@/components/ui/button";
@@ -31,23 +33,17 @@ const EMPTY_DRAFT: UpcomingDraft = {
 };
 
 export const UpcomingView = ({ onAttend }: Props) => {
-  const [items, setItems] = useLocalStorage<UpcomingItem[]>(
-    "wookbook:upcoming",
-    []
-  );
+  const { items, addUpcoming, removeUpcoming } = useUpcoming();
   const [draft, setDraft] = useState<UpcomingDraft>(EMPTY_DRAFT);
 
   const set = (field: keyof UpcomingDraft) =>
     (e: React.ChangeEvent<HTMLInputElement>) =>
       setDraft((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const add = () => {
+  const add = async () => {
     if (!draft.artist.trim() || !draft.date) return;
-    setItems([
-      ...items,
-      {
-        id:        uid(),
-        addedAt:   new Date().toISOString(),
+    try {
+      await addUpcoming.mutateAsync({
         artist:    draft.artist.trim(),
         date:      draft.date,
         venue:     draft.venue.trim() || undefined,
@@ -55,17 +51,17 @@ export const UpcomingView = ({ onAttend }: Props) => {
         state:     draft.state.trim() || undefined,
         ticketUrl: draft.ticketUrl.trim() || undefined,
         notes:     draft.notes.trim() || undefined,
-      },
-    ]);
-    setDraft(EMPTY_DRAFT);
+      });
+      setDraft(EMPTY_DRAFT);
+    } catch {
+      toast.error("Couldn't save upcoming show.");
+    }
   };
 
-  const remove = (id: string) =>
-    setItems(items.filter((i) => i.id !== id));
-
-  const attend = (item: UpcomingItem) => {
-    onAttend(item);
-    remove(item.id);
+  const remove = (id: string) => {
+    removeUpcoming.mutate(id, {
+      onError: () => toast.error("Couldn't remove show."),
+    });
   };
 
   const sorted = [...items].sort(
@@ -101,7 +97,10 @@ export const UpcomingView = ({ onAttend }: Props) => {
             value={draft.notes}
             onChange={set("notes")}
           />
-          <Button onClick={add} disabled={!draft.artist.trim() || !draft.date}>
+          <Button
+            onClick={add}
+            disabled={!draft.artist.trim() || !draft.date || addUpcoming.isPending}
+          >
             <Plus className="h-4 w-4" /> Add
           </Button>
         </div>
@@ -115,7 +114,7 @@ export const UpcomingView = ({ onAttend }: Props) => {
             index={i + 1}
             action={
               <div className="flex gap-2">
-                <Button size="sm" variant="default" onClick={() => attend(item)}>
+                <Button size="sm" variant="default" onClick={() => onAttend(item)}>
                   <Check className="h-4 w-4" /> Mark attended
                 </Button>
                 <Button size="sm" variant="ghost" onClick={() => remove(item.id)}>

@@ -1,3 +1,4 @@
+// src/components/ArchiveView.tsx
 import { useMemo, useState } from "react";
 import { Concert, parseConcertDate } from "@/types/concert";
 import { RecordingEntry, Track } from "@/types/recording";
@@ -6,13 +7,12 @@ import { StubDetail } from "./StubDetail";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search, Download, Upload, X } from "lucide-react";
+import { Search, Download, X } from "lucide-react";
 import { toast } from "sonner";
 
 type Props = {
   concerts: Concert[];
-  extras: Concert[];
-  onUpdateExtras: (next: Concert[]) => void;
+  onSaveConcert: (concert: Concert) => void;
   selectedArtist: string | null;
   onClearArtist: () => void;
   recordingCache: Map<string, RecordingEntry>;
@@ -26,8 +26,7 @@ type Props = {
 
 export const ArchiveView = ({
   concerts,
-  extras,
-  onUpdateExtras,
+  onSaveConcert,
   selectedArtist,
   onClearArtist,
   recordingCache,
@@ -67,7 +66,7 @@ export const ArchiveView = ({
     });
     list = [...list].sort((a, b) => {
       if (sort === "artist") return a.artist.localeCompare(b.artist);
-      if (sort === "venue") return a.venue.localeCompare(b.venue);
+      if (sort === "venue")  return a.venue.localeCompare(b.venue);
       const ta = parseConcertDate(a.date).ts;
       const tb = parseConcertDate(b.date).ts;
       return sort === "newest" ? tb - ta : ta - tb;
@@ -88,28 +87,12 @@ export const ArchiveView = ({
   }, [filtered, sort, year]);
 
   const open = filtered.find((c) => c.id === openId) ?? null;
-  const isExtra = (id: string) => extras.some((e) => e.id === id);
-
-  const saveOne = (c: Concert) => {
-    if (isExtra(c.id)) {
-      onUpdateExtras(extras.map((e) => (e.id === c.id ? c : e)));
-    } else {
-      onUpdateExtras([...extras.filter((e) => e.id !== c.id), c]);
-    }
-    toast.success("Stub updated");
-  };
-
-  const deleteOne = (id: string) => {
-    if (isExtra(id)) {
-      onUpdateExtras(extras.filter((e) => e.id !== id));
-      toast.success("Stub removed");
-    } else {
-      toast.error("Seed stubs can't be deleted, only edited.");
-    }
-  };
 
   const exportAll = () => {
-    const blob = new Blob([JSON.stringify({ concerts }, null, 2)], { type: "application/json" });
+    const blob = new Blob(
+      [JSON.stringify({ concerts }, null, 2)],
+      { type: "application/json" }
+    );
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -117,27 +100,6 @@ export const ArchiveView = ({
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Archive exported");
-  };
-
-  const importFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const f = e.target.files?.[0];
-    if (!f) return;
-    try {
-      const text = await f.text();
-      const data = JSON.parse(text);
-      const arr: Concert[] = Array.isArray(data) ? data : data.concerts;
-      if (!Array.isArray(arr)) throw new Error("No concerts array");
-      const cleaned: Concert[] = arr.map((c, i) => ({
-        ...c,
-        id: c.id || `imp-${Date.now().toString(36)}-${i}`,
-      }));
-      onUpdateExtras([...extras, ...cleaned]);
-      toast.success(`Imported ${cleaned.length} stubs`);
-    } catch {
-      toast.error("Couldn't parse that file");
-    } finally {
-      e.target.value = "";
-    }
   };
 
   return (
@@ -173,12 +135,7 @@ export const ArchiveView = ({
         <Button variant="outline" size="sm" onClick={exportAll} className="border-2 border-ink">
           <Download className="h-4 w-4" /> Export
         </Button>
-        <Button variant="outline" size="sm" asChild className="border-2 border-ink">
-          <label className="cursor-pointer">
-            <Upload className="h-4 w-4" /> Import
-            <input type="file" accept="application/json" className="hidden" onChange={importFile} />
-          </label>
-        </Button>
+        {/* Import removed in Session D — requires Supabase show creation (Phase 3) */}
       </div>
 
       {selectedArtist && (
@@ -242,9 +199,9 @@ export const ArchiveView = ({
         concert={open}
         open={!!openId}
         onOpenChange={(o) => !o && setOpenId(null)}
-        onSave={saveOne}
-        onDelete={deleteOne}
-        canDelete={!!open && isExtra(open.id)}
+        onSave={onSaveConcert}
+        onDelete={undefined}
+        canDelete={false}
         recordingEntry={open ? recordingCache.get(open.id) : undefined}
         currentTrack={currentTrack}
         isPlaying={isPlaying}
