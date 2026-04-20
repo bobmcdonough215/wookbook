@@ -3,32 +3,62 @@ import { useLocalStorage, uid } from "@/lib/storage";
 import { UpcomingItem, WishlistItem } from "@/types/concert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Heart, Trash2, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+
+const PRIORITY_LABELS: Record<WishlistItem["priority"], string> = {
+  high:   "🔥 High priority",
+  medium: "Medium priority",
+  low:    "Low priority",
+};
 
 export const WishlistView = () => {
   const [items, setItems] = useLocalStorage<WishlistItem[]>("wookbook:wishlist", []);
   const [, setUpcoming] = useLocalStorage<UpcomingItem[]>("wookbook:upcoming", []);
-  const [draft, setDraft] = useState({ artist: "", venue: "", notes: "" });
+  const [draft, setDraft] = useState<{
+    artist: string;
+    priority: WishlistItem["priority"];
+    notes: string;
+  }>({
+    artist:   "",
+    priority: "medium",
+    notes:    "",
+  });
 
   const add = () => {
-    if (!draft.artist) return;
-    setItems([{ id: uid(), addedAt: new Date().toISOString(), ...draft }, ...items]);
-    setDraft({ artist: "", venue: "", notes: "" });
+    if (!draft.artist.trim()) return;
+    setItems([
+      {
+        id:       uid(),
+        addedAt:  new Date().toISOString(),
+        artist:   draft.artist.trim(),
+        priority: draft.priority,
+        notes:    draft.notes.trim() || undefined,
+      },
+      ...items,
+    ]);
+    setDraft({ artist: "", priority: "medium", notes: "" });
   };
-  const remove = (id: string) => setItems(items.filter((i) => i.id !== id));
+
+  const remove = (id: string) =>
+    setItems(items.filter((i) => i.id !== id));
+
   const promote = (it: WishlistItem) => {
     setUpcoming((prev) => [
       ...prev,
       {
-        id: uid(),
+        id:      uid(),
         addedAt: new Date().toISOString(),
-        artist: it.artist,
-        venue: it.venue ?? "TBA",
-        city: "",
-        state: "",
-        date: new Date().toISOString().slice(0, 10),
-        special_notes: it.notes,
+        artist:  it.artist,
+        date:    new Date().toISOString().slice(0, 10),
+        notes:   it.notes,
       },
     ]);
     remove(it.id);
@@ -41,11 +71,37 @@ export const WishlistView = () => {
         <div className="stamp">Add new</div>
         <h2 className="mb-4 font-display text-2xl">A dream show</h2>
         <div className="grid gap-3 sm:grid-cols-3">
-          <Input placeholder="Artist *" value={draft.artist} onChange={(e) => setDraft({ ...draft, artist: e.target.value })} />
-          <Input placeholder="Dream venue" value={draft.venue} onChange={(e) => setDraft({ ...draft, venue: e.target.value })} />
-          <Input placeholder="Notes" value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} />
+          <Input
+            placeholder="Artist *"
+            value={draft.artist}
+            onChange={(e) => setDraft({ ...draft, artist: e.target.value })}
+          />
+          <Select
+            value={draft.priority}
+            onValueChange={(v) =>
+              setDraft({ ...draft, priority: v as WishlistItem["priority"] })
+            }
+          >
+            <SelectTrigger className="border-2 border-ink">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="high">🔥 High priority</SelectItem>
+              <SelectItem value="medium">Medium priority</SelectItem>
+              <SelectItem value="low">Low priority</SelectItem>
+            </SelectContent>
+          </Select>
+          <Input
+            placeholder="Notes"
+            value={draft.notes}
+            onChange={(e) => setDraft({ ...draft, notes: e.target.value })}
+          />
         </div>
-        <Button className="mt-3" onClick={add} disabled={!draft.artist}>
+        <Button
+          className="mt-3"
+          onClick={add}
+          disabled={!draft.artist.trim()}
+        >
           <Heart className="h-4 w-4" /> Add to wishlist
         </Button>
       </section>
@@ -58,14 +114,28 @@ export const WishlistView = () => {
           >
             <div className="min-w-0">
               <div className="font-display text-xl">{it.artist}</div>
-              {it.venue && <div className="text-sm text-muted-foreground">@ {it.venue}</div>}
-              {it.notes && <div className="mt-1 stamp">{it.notes}</div>}
+              <div className="stamp mt-0.5">{PRIORITY_LABELS[it.priority]}</div>
+              {it.notes && (
+                <div className="mt-1 text-sm text-muted-foreground">
+                  {it.notes}
+                </div>
+              )}
             </div>
             <div className="flex shrink-0 gap-1">
-              <Button size="sm" variant="outline" onClick={() => promote(it)} title="Move to upcoming">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => promote(it)}
+                title="Move to upcoming"
+              >
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button size="icon" variant="ghost" onClick={() => remove(it.id)} aria-label="Remove">
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={() => remove(it.id)}
+                aria-label="Remove"
+              >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>

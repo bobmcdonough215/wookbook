@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import rawData from "@/data/concerts.json";
-import { Concert, UpcomingItem } from "@/types/concert";
+import { Concert } from "@/types/concert";
 import { useLocalStorage } from "@/lib/storage";
 import { useRecordings } from "@/hooks/useRecordings";
 import { useRecordingPlayer } from "@/hooks/useRecordingPlayer";
@@ -152,8 +152,16 @@ const Index = () => {
               )}
               {view === "stats" && <Stats concerts={all} />}
               {view === "upcoming" && <UpcomingView onAttend={(item) => {
-                const { addedAt: _addedAt, ...rest } = item;
-                setExtras([...extras, rest]);
+                const concert: Concert = {
+                  id:            item.id,
+                  artist:        item.artist,
+                  venue:         item.venue ?? "",
+                  city:          item.city ?? "",
+                  state:         item.state ?? "",
+                  date:          item.date,
+                  special_notes: item.notes,
+                };
+                setExtras([...extras, concert]);
               }} />}
               {view === "wishlist" && <WishlistView />}
             </div>
