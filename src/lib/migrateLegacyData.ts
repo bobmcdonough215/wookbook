@@ -121,7 +121,46 @@ export async function migrateLegacyLocalStorage(userId: string): Promise<void> {
     );
   }
 
-  // ── 2. Upcoming shows → upcoming_shows ────────────────────────────────────────
+  // ── 2. Seed shows → attendances (bulk) ───────────────────────────────────────
+  // In the old single-user app, all 342 seed shows were always in the archive
+  // by default — no explicit attendance record was required. get_user_archive()
+  // only returns shows with an attendances row, so we must create records for
+  // every seed show. Upsert with onConflict preserves any ratings/memories
+  // already written in step 1.
+  try {
+    const { data: seedShows, error: seedError } = await supabase
+      .from("shows")
+      .select("id")
+      .eq("source", "seed");
+
+    if (seedError) {
+      errors.push(`seed shows fetch: ${seedError.code}`);
+    } else if (seedShows && seedShows.length > 0) {
+      const rows = seedShows.map((s) => ({
+        user_id:       userId,
+        show_id:       s.id,
+        rating:        null,
+        memory:        null,
+        memory_public: false,
+      }));
+
+      const BATCH = 100;
+      for (let i = 0; i < rows.length; i += BATCH) {
+        const { error } = await supabase
+          .from("attendances")
+          .upsert(rows.slice(i, i + BATCH), { onConflict: "user_id,show_id" });
+        if (error) {
+          errors.push(`seed attendance batch ${i / BATCH}: ${error.code}`);
+        }
+      }
+    }
+  } catch (e) {
+    errors.push(
+      `seed shows error: ${e instanceof Error ? e.message : "unknown"}`
+    );
+  }
+
+  // ── 4. Upcoming shows → upcoming_shows ────────────────────────────────────────
   try {
     const raw = localStorage.getItem(LEGACY_KEYS.upcoming);
     if (raw) {
@@ -177,7 +216,7 @@ export async function migrateLegacyLocalStorage(userId: string): Promise<void> {
     );
   }
 
-  // ── 3. Wishlist → wishlist ────────────────────────────────────────────────────
+  // ── 5. Wishlist → wishlist ────────────────────────────────────────────────────
   try {
     const raw = localStorage.getItem(LEGACY_KEYS.wishlist);
     if (raw) {
@@ -219,13 +258,13 @@ export async function migrateLegacyLocalStorage(userId: string): Promise<void> {
     );
   }
 
-  // ── 4. Clear rec-known ────────────────────────────────────────────────────────
+  // ── 6. Clear rec-known ────────────────────────────────────────────────────────
   // Show IDs are now Supabase UUIDs — old seed-XXXX keys are permanently stale.
   // The recording prefetch will re-populate on next mount with the new IDs.
   // This step runs regardless of errors above.
   localStorage.removeItem(LEGACY_KEYS.recKnown);
 
-  // ── 5. Finalize ───────────────────────────────────────────────────────────────
+  // ── 7. Finalize ───────────────────────────────────────────────────────────────
   if (errors.length === 0) {
     // Clean up all legacy keys and mark migration complete
     localStorage.removeItem(LEGACY_KEYS.extras);
