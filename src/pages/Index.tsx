@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import rawData from "@/data/concerts.json";
-import { Concert } from "@/types/concert";
+import { Concert, UpcomingItem } from "@/types/concert";
+import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
+import { AuthModal } from "@/components/AuthModal";
+import { UsernameSetupModal } from "@/components/UsernameSetupModal";
+import { LogIn, LogOut } from "lucide-react";
 import { useLocalStorage } from "@/lib/storage";
 import { useRecordings } from "@/hooks/useRecordings";
 import { useRecordingPlayer } from "@/hooks/useRecordingPlayer";
@@ -22,6 +27,9 @@ const Index = () => {
   const [view, setView] = useState<ViewKey>("archive");
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const { user, loading: authLoading, signOut } = useAuth();
+  const { needsUsernameSetup, profile } = useProfile();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const all = useMemo(() => {
     const map = new Map<string, Concert>();
@@ -74,6 +82,13 @@ const Index = () => {
   };
   const handleDismiss = () => { dismiss(); setCurrentConcert(null); setCurrentTracks([]); };
 
+  // !!user guard is critical: TanStack Query keeps profile data in cache for
+  // gcTime (10 min) after sign-out. Without it, a logged-out user with a
+  // cached temp username would see this screen and hit "Not authenticated".
+  if (!authLoading && !!user && needsUsernameSetup) {
+    return <UsernameSetupModal />;
+  }
+
   const titleByView: Record<ViewKey, { eyebrow: string; title: string; sub: string }> = {
     archive: { eyebrow: "Volume I", title: "The Archive", sub: "Every show, catalogued and dated." },
     stats: { eyebrow: "Volume II", title: "By the Numbers", sub: "Patterns drawn from the ledger." },
@@ -102,7 +117,38 @@ const Index = () => {
             <div className="flex items-center gap-2 px-6 py-3">
               <SidebarTrigger className="border border-ink" />
               <div className="stamp">◆ WookBook — Personal Concert Ledger</div>
-              <div className="ml-auto stamp">{all.length} stubs on file</div>
+              <div className="ml-auto flex items-center gap-3">
+                {user && profile ? (
+                  <button
+                    className="stamp text-primary hover:underline transition-colors"
+                    title="Profile settings — coming soon"
+                  >
+                    @{profile.username}
+                  </button>
+                ) : (
+                  <div className="stamp">{all.length} stubs on file</div>
+                )}
+                {!authLoading && (
+                  user ? (
+                    <button
+                      onClick={signOut}
+                      className="flex items-center gap-1 stamp text-muted-foreground hover:text-foreground transition-colors"
+                      title="Sign out"
+                    >
+                      <LogOut className="h-3 w-3" />
+                      <span>Sign out</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => setShowAuthModal(true)}
+                      className="flex items-center gap-1 stamp text-primary hover:underline transition-colors"
+                    >
+                      <LogIn className="h-3 w-3" />
+                      <span>Sign in</span>
+                    </button>
+                  )
+                )}
+              </div>
             </div>
           </header>
 
@@ -192,6 +238,8 @@ const Index = () => {
           onDismiss={handleDismiss}
         />
       )}
+
+      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
     </SidebarProvider>
   );
 };
