@@ -12,10 +12,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Archive, CalendarPlus, Heart, BarChart3, Search, FileUp } from "lucide-react";
+import { Archive, CalendarPlus, Compass, Heart, BarChart3, Search, FileUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-export type ViewKey = "archive" | "stats" | "upcoming" | "wishlist" | "import";
+export type ViewKey = "archive" | "stats" | "upcoming" | "wishlist" | "import" | "discover";
 
 type Props = {
   view: ViewKey;
@@ -30,11 +30,12 @@ type Props = {
 };
 
 const navItems: { key: ViewKey; label: string; icon: typeof Archive }[] = [
-  { key: "archive",  label: "Archive",     icon: Archive },
-  { key: "stats",    label: "Stats",        icon: BarChart3 },
-  { key: "upcoming", label: "Upcoming",     icon: CalendarPlus },
-  { key: "wishlist", label: "Wishlist",     icon: Heart },
-  { key: "import",   label: "Import CSV",  icon: FileUp },
+  { key: "archive",  label: "Archive",    icon: Archive },
+  { key: "stats",    label: "Stats",      icon: BarChart3 },
+  { key: "upcoming", label: "Upcoming",   icon: CalendarPlus },
+  { key: "wishlist", label: "Wishlist",   icon: Heart },
+  { key: "discover", label: "Discover",   icon: Compass },
+  { key: "import",   label: "Import CSV", icon: FileUp },
 ];
 
 export const AppSidebar = ({
@@ -62,6 +63,7 @@ export const AppSidebar = ({
     stats:    undefined,
     upcoming: upcomingCount,
     wishlist: wishlistCount,
+    discover: undefined,
     import:   undefined,
   };
 

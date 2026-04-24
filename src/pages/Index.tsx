@@ -21,6 +21,7 @@ import { ArchiveView } from "@/components/ArchiveView";
 import { UpcomingView } from "@/components/UpcomingView";
 import { WishlistView } from "@/components/WishlistView";
 import { Stats } from "@/components/Stats";
+import { DiscoverView } from "@/components/DiscoverView";
 import { CsvImportView } from "@/components/CsvImportView";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { LogIn, LogOut } from "lucide-react";
@@ -159,6 +160,7 @@ const Index = () => {
     stats:    { eyebrow: "Volume II",  title: "By the Numbers",   sub: "Patterns drawn from the ledger." },
     upcoming: { eyebrow: "Volume III", title: "On the Horizon",   sub: "Tickets in hand, dates circled." },
     wishlist: { eyebrow: "Volume IV",  title: "The Wishlist",     sub: "Shows you'd cross a state line for." },
+    discover: { eyebrow: "Volume V",   title: "Discover",         sub: "New dates for artists you love." },
     import:   { eyebrow: "Utility",   title: "Import CSV",        sub: "Bring your whole history in at once." },
   };
   const head = titleByView[view];
@@ -277,6 +279,7 @@ const Index = () => {
               {view === "stats"    && <Stats concerts={concerts} />}
               {view === "upcoming" && <UpcomingView onAttend={handleAttend} />}
               {view === "wishlist" && <WishlistView />}
+              {view === "discover" && <DiscoverView concerts={concerts} />}
               {view === "import"   && <CsvImportView />}
             </div>
           </main>
