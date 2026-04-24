@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,6 +19,12 @@ const queryClient = new QueryClient({
   },
 });
 
+const DevTools = () => {
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
+  return <ReactQueryDevtools initialIsOpen={false} />;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -30,7 +37,7 @@ const App = () => (
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
-    {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+    {import.meta.env.DEV && <DevTools />}
   </QueryClientProvider>
 );
 

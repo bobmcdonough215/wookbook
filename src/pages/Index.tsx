@@ -21,6 +21,7 @@ import { ArchiveView } from "@/components/ArchiveView";
 import { UpcomingView } from "@/components/UpcomingView";
 import { WishlistView } from "@/components/WishlistView";
 import { Stats } from "@/components/Stats";
+import { CsvImportView } from "@/components/CsvImportView";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { LogIn, LogOut } from "lucide-react";
 
@@ -154,10 +155,11 @@ const Index = () => {
   }
 
   const titleByView: Record<ViewKey, { eyebrow: string; title: string; sub: string }> = {
-    archive:  { eyebrow: "Beta Version 0.01", title: "The Archive",     sub: "" },
-    stats:    { eyebrow: "Volume II",  title: "By the Numbers",  sub: "Patterns drawn from the ledger." },
-    upcoming: { eyebrow: "Volume III", title: "On the Horizon",  sub: "Tickets in hand, dates circled." },
-    wishlist: { eyebrow: "Volume IV",  title: "The Wishlist",    sub: "Shows you'd cross a state line for." },
+    archive:  { eyebrow: "Beta Version 0.01", title: "The Archive",      sub: "" },
+    stats:    { eyebrow: "Volume II",  title: "By the Numbers",   sub: "Patterns drawn from the ledger." },
+    upcoming: { eyebrow: "Volume III", title: "On the Horizon",   sub: "Tickets in hand, dates circled." },
+    wishlist: { eyebrow: "Volume IV",  title: "The Wishlist",     sub: "Shows you'd cross a state line for." },
+    import:   { eyebrow: "Utility",   title: "Import CSV",        sub: "Bring your whole history in at once." },
   };
   const head = titleByView[view];
 
@@ -178,9 +180,11 @@ const Index = () => {
 
         <div className="flex flex-1 flex-col">
           <header className="sticky top-0 z-10 border-b-2 border-ink bg-background/95 backdrop-blur">
-            <div className="flex items-center gap-2 px-6 py-3">
+            <div className="flex items-center gap-2 px-3 py-3 sm:px-6">
               <SidebarTrigger className="border border-ink" />
-              <div className="stamp">◆ WookBook — Personal Concert Ledger</div>
+              <div className="stamp">
+                ◆ WookBook<span className="hidden sm:inline"> — Personal Concert Ledger</span>
+              </div>
               <div className="ml-auto flex items-center gap-3">
                 {user && profile ? (
                   <button
@@ -198,7 +202,7 @@ const Index = () => {
                       title="Sign out"
                     >
                       <LogOut className="h-3 w-3" />
-                      <span>Sign out</span>
+                      <span className="hidden sm:inline">Sign out</span>
                     </button>
                   ) : (
                     <button
@@ -206,7 +210,7 @@ const Index = () => {
                       className="flex items-center gap-1 stamp text-primary hover:underline transition-colors"
                     >
                       <LogIn className="h-3 w-3" />
-                      <span>Sign in</span>
+                      <span className="hidden sm:inline">Sign in</span>
                     </button>
                   )
                 )}
@@ -216,22 +220,22 @@ const Index = () => {
 
           {/* Global stats strip */}
           <div className="border-b-2 border-ink bg-card">
-            <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-6">
+            <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-2 sm:px-6">
               {[
                 { val: globalStats.shows,   label: "Shows" },
                 { val: globalStats.artists, label: "Artists" },
                 { val: globalStats.venues,  label: "Venues" },
                 { val: globalStats.years,   label: "Years" },
               ].map(({ val, label }) => (
-                <div key={label} className="flex flex-col items-center px-6 py-3 first:pl-0 last:pr-0">
-                  <span className="font-mono text-xl font-semibold leading-none">{val}</span>
-                  <span className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
+                <div key={label} className="flex flex-col items-center px-3 py-3 first:pl-0 last:pr-0 sm:px-6">
+                  <span className="font-mono text-lg font-semibold leading-none sm:text-xl">{val}</span>
+                  <span className="mt-0.5 font-mono text-[9px] uppercase tracking-widest text-muted-foreground sm:text-[10px]">{label}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <main className="flex-1 overflow-auto px-6 py-8">
+          <main className="flex-1 overflow-auto px-4 py-6 sm:px-6 sm:py-8">
             <div className="mx-auto max-w-5xl space-y-8">
               <div>
                 <div className="stamp">{head.eyebrow}</div>
@@ -273,10 +277,11 @@ const Index = () => {
               {view === "stats"    && <Stats concerts={concerts} />}
               {view === "upcoming" && <UpcomingView onAttend={handleAttend} />}
               {view === "wishlist" && <WishlistView />}
+              {view === "import"   && <CsvImportView />}
             </div>
           </main>
 
-          <footer className={`border-t-2 border-ink px-6 py-4 ${currentTrack ? "pb-20" : ""}`}>
+          <footer className={`border-t-2 border-ink px-4 py-4 sm:px-6 ${currentTrack ? "pb-20" : ""}`}>
             <div className="mx-auto flex max-w-5xl items-center justify-between">
               <div className="stamp">WookBook · est. {new Date().getFullYear()}</div>
               <div className="font-mono text-[10px] text-muted-foreground">

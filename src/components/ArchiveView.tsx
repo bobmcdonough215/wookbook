@@ -106,8 +106,8 @@ export const ArchiveView = ({
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <div className="relative w-full sm:flex-1 sm:min-w-[200px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={q}
@@ -117,7 +117,7 @@ export const ArchiveView = ({
           />
         </div>
         <Select value={year} onValueChange={setYear}>
-          <SelectTrigger className="w-36 border-2 border-ink"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-32 border-2 border-ink sm:w-36"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All years</SelectItem>
             {years.map((y) => (

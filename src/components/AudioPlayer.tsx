@@ -45,7 +45,7 @@ export const AudioPlayer = ({
     <div className="fixed bottom-0 left-0 right-0 z-50">
       {/* Tracklist panel — right-anchored, ~30% width */}
       {showTracklist && (
-        <div className="absolute bottom-full right-0 w-[30%] min-w-[280px] border-2 border-b-0 border-ink bg-card shadow-[-4px_-4px_0_hsl(var(--ink))]">
+        <div className="absolute bottom-full right-0 w-full sm:w-[30%] sm:min-w-[280px] border-2 border-b-0 border-ink bg-card shadow-[-4px_-4px_0_hsl(var(--ink))]">
           <div className="flex items-center justify-between border-b border-ink/20 px-4 py-2">
             <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground truncate pr-2">
               {concert ? `${concert.artist} · ${formatConcertDate(concert.date)}` : "Tracklist"}
@@ -89,7 +89,7 @@ export const AudioPlayer = ({
 
       {/* Player bar */}
       <div className="bg-primary">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-6 py-3">
+        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3 sm:px-6">
           {/* Prev */}
           <button
             onClick={() => hasPrev && onPlayTrack(tracks[currentIndex - 1])}
@@ -132,8 +132,10 @@ export const AudioPlayer = ({
               <div className="truncate font-mono text-[10px] text-primary-foreground/70">
                 {concert.artist}
                 {concert.date ? ` · ${formatConcertDate(concert.date)}` : ""}
-                {concert.venue ? ` · ${concert.venue}` : ""}
-                {concert.city ? `, ${concert.city}` : ""}
+                <span className="hidden sm:inline">
+                  {concert.venue ? ` · ${concert.venue}` : ""}
+                  {concert.city ? `, ${concert.city}` : ""}
+                </span>
               </div>
             )}
             <div className="mt-0.5 flex items-center gap-2">

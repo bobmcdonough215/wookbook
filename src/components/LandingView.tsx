@@ -48,13 +48,13 @@ export const LandingView = ({ onSignIn }: Props) => (
     </header>
 
     {/* ── Hero ── */}
-    <section className="mx-auto max-w-5xl px-6 pb-16 pt-20">
-      <h1 className="font-display text-8xl leading-none sm:text-[7rem]">
+    <section className="mx-auto max-w-5xl px-4 pb-12 pt-12 sm:px-6 sm:pb-16 sm:pt-20">
+      <h1 className="font-display text-6xl leading-none sm:text-8xl lg:text-[7rem]">
         Wook<span className="text-primary">Book</span>
       </h1>
       <div className="brass-rule my-8 max-w-sm" />
       <p className="max-w-lg font-display text-3xl leading-snug">
-        A concert archive built by a fan, for fans.
+        A concert archive built by a fan, for fans. Not powered by AI. And I'm not doing anything with your data.
       </p>
       <p className="mt-4 max-w-md text-sm italic text-muted-foreground">
         Log every show you've ever seen. Discover live recordings. Track upcoming dates.
@@ -131,7 +131,7 @@ export const LandingView = ({ onSignIn }: Props) => (
               <div className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                 Sample format
               </div>
-              <pre className="mt-3 text-left font-mono text-xs leading-relaxed text-foreground">
+              <pre className="mt-3 overflow-x-auto text-left font-mono text-xs leading-relaxed text-foreground">
 {`artist,date,venue,city,state
 Phish,1999-12-31,MSG,New York,NY
 Goose,2023-07-04,SPAC,Saratoga,NY

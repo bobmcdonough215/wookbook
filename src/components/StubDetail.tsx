@@ -82,7 +82,7 @@ export const StubDetail = ({
           </div>
           {draft.special_notes && (
             <div>
-              <dt className="stamp">Notes</dt>
+              <dt className="stamp">With</dt>
               <dd>{draft.special_notes}</dd>
             </div>
           )}
