@@ -8,8 +8,9 @@ import { useWatchedArtists, WatchedArtist } from "@/hooks/useWatchedArtists";
 import { queryKeys } from "@/lib/queryKeys";
 import { Concert } from "@/types/concert";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
-  ThumbsUp, ThumbsDown, EyeOff, Volume2, VolumeX, RefreshCw, ExternalLink, Trash2,
+  ThumbsUp, ThumbsDown, EyeOff, Volume2, VolumeX, RefreshCw, ExternalLink, Trash2, Plus,
 } from "lucide-react";
 
 type TourEvent = {
@@ -36,7 +37,7 @@ export const DiscoverView = ({ concerts }: Props) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { addUpcoming } = useUpcoming();
-  const { artists: watchedArtists, loading: watchedLoading, syncFromArchive, toggleMute, removeArtist } = useWatchedArtists();
+  const { artists: watchedArtists, loading: watchedLoading, syncFromArchive, addArtist, toggleMute, removeArtist } = useWatchedArtists();
   const [tab, setTab] = useState<"shows" | "watched">("shows");
 
   // Auto-populate watched artists from archive on first Discover visit
@@ -241,6 +242,7 @@ export const DiscoverView = ({ concerts }: Props) => {
           loading={watchedLoading}
           concerts={concerts}
           syncFromArchive={syncFromArchive}
+          addArtist={addArtist}
           toggleMute={toggleMute}
           removeArtist={removeArtist}
         />
@@ -353,13 +355,26 @@ type WatchedArtistsPanelProps = {
   loading:         boolean;
   concerts:        Concert[];
   syncFromArchive: ReturnType<typeof useWatchedArtists>["syncFromArchive"];
+  addArtist:       ReturnType<typeof useWatchedArtists>["addArtist"];
   toggleMute:      ReturnType<typeof useWatchedArtists>["toggleMute"];
   removeArtist:    ReturnType<typeof useWatchedArtists>["removeArtist"];
 };
 
 const WatchedArtistsPanel = ({
-  artists, loading, concerts, syncFromArchive, toggleMute, removeArtist,
+  artists, loading, concerts, syncFromArchive, addArtist, toggleMute, removeArtist,
 }: WatchedArtistsPanelProps) => {
+  const [input, setInput] = useState("");
+
+  const handleAdd = async () => {
+    const name = input.trim();
+    if (!name) return;
+    try {
+      await addArtist.mutateAsync(name);
+      setInput("");
+    } catch {
+      toast.error("Couldn't add artist.");
+    }
+  };
   const handleSync = () => {
     const counts = new Map<string, number>();
     for (const c of concerts) {
@@ -398,6 +413,24 @@ const WatchedArtistsPanel = ({
         >
           <RefreshCw className={`h-3.5 w-3.5 ${syncFromArchive.isPending ? "animate-spin" : ""}`} />
           Sync from archive
+        </Button>
+      </div>
+
+      <div className="flex gap-2">
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+          placeholder="Add an artist to watch…"
+          className="h-8 text-sm"
+        />
+        <Button
+          size="sm"
+          onClick={handleAdd}
+          disabled={!input.trim() || addArtist.isPending}
+          className="gap-1.5 flex-shrink-0"
+        >
+          <Plus className="h-3.5 w-3.5" /> Add
         </Button>
       </div>
 

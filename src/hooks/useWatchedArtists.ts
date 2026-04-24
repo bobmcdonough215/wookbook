@@ -80,6 +80,22 @@ export function useWatchedArtists() {
     },
   });
 
+  const addArtist = useMutation({
+    mutationFn: async (artistName: string) => {
+      if (!user) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("watched_artists")
+        .upsert(
+          { user_id: user.id, artist_name: artistName.trim(), show_count: 0, auto_watched: false, muted: false },
+          { onConflict: "user_id,artist_name", ignoreDuplicates: true }
+        );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.watchedArtists(user?.id) });
+    },
+  });
+
   const removeArtist = useMutation({
     mutationFn: async (id: string) => {
       if (!user) throw new Error("Not authenticated");
@@ -99,6 +115,7 @@ export function useWatchedArtists() {
     artists:         query.data ?? [],
     loading:         query.isLoading,
     syncFromArchive,
+    addArtist,
     toggleMute,
     removeArtist,
   };
