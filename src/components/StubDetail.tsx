@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
-import { Save, Trash2, Star } from "lucide-react";
+import { Save, Trash2, Star, Loader2, Pause, Play, X } from "lucide-react";
 import { RecordingSection } from "./RecordingSection";
+import { useSetlist } from "@/hooks/useSetlist";
 
 type Props = {
   concert: Concert | null;
@@ -38,6 +39,10 @@ export const StubDetail = ({
   onToggleTrack,
 }: Props) => {
   const [draft, setDraft] = useState<Concert | null>(concert);
+  const { data: setlist, isLoading: setlistLoading } = useSetlist(
+    concert?.artist,
+    concert?.date
+  );
 
   useEffect(() => setDraft(concert), [concert]);
 
@@ -82,6 +87,52 @@ export const StubDetail = ({
             </div>
           )}
         </dl>
+
+        <div className="ink-rule" />
+
+        {/* Setlist */}
+        {setlistLoading && (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            <span className="font-mono text-xs">Looking up setlist…</span>
+          </div>
+        )}
+
+        {!setlistLoading && setlist && setlist.sets.length > 0 && (
+          <div className="space-y-4">
+            <div className="stamp">Setlist</div>
+            {setlist.sets.map((set) => (
+              <div key={set.label}>
+                <div className="stamp mb-1.5 text-muted-foreground">{set.label}</div>
+                <ol className="space-y-0.5">
+                  {set.songs.map((song, i) => (
+                    <li key={i} className="flex items-baseline gap-2">
+                      <span className="w-5 shrink-0 font-mono text-[10px] text-muted-foreground tabular-nums">
+                        {i + 1}
+                      </span>
+                      <span className="font-mono text-xs">{song}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            ))}
+            {/* Attribution — required by Setlist.fm ToS, no nofollow */}
+            {setlist.url && (
+              <a
+                href={setlist.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Setlist via setlist.fm ↗
+              </a>
+            )}
+          </div>
+        )}
+
+        {!setlistLoading && setlist === null && (
+          <p className="font-mono text-[10px] text-muted-foreground">No setlist on file.</p>
+        )}
 
         <div className="ink-rule" />
 
@@ -132,29 +183,67 @@ export const StubDetail = ({
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-2 pt-2">
-          {onDelete && canDelete && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => {
-                onDelete(draft.id);
-                onOpenChange(false);
-              }}
+        {/* Now Playing — sticky control so user can pause without closing */}
+        {currentTrack && (
+          <div className="sticky bottom-0 -mx-6 -mb-6 border-t-2 border-ink bg-primary px-4 py-3">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => onToggleTrack(currentTrack, draft ?? undefined)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-primary-foreground/40 bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/25"
+                aria-label={isPlaying ? "Pause" : "Play"}
+              >
+                {isPlaying
+                  ? <Pause className="h-4 w-4 fill-current" />
+                  : <Play className="h-4 w-4 fill-current" />}
+              </button>
+              <span className="min-w-0 flex-1 truncate font-mono text-[11px] uppercase tracking-wider text-primary-foreground">
+                {currentTrack.title}
+              </span>
+              <button
+                onClick={() => onOpenChange(false)}
+                className="shrink-0 text-primary-foreground/70 hover:text-primary-foreground"
+                aria-label="Close"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Footer — save/delete + big close tap target on mobile */}
+        {!currentTrack && (
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:items-center sm:justify-end">
+            <button
+              onClick={() => onOpenChange(false)}
+              className="order-last w-full rounded-sm border-2 border-ink py-3 font-mono text-xs uppercase tracking-widest sm:hidden"
             >
-              <Trash2 className="h-4 w-4" /> Delete
-            </Button>
-          )}
-          <Button
-            size="sm"
-            onClick={() => {
-              onSave(draft);
-              onOpenChange(false);
-            }}
-          >
-            <Save className="h-4 w-4" /> Save
-          </Button>
-        </div>
+              Close
+            </button>
+            <div className="flex items-center justify-end gap-2">
+              {onDelete && canDelete && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    onDelete(draft.id);
+                    onOpenChange(false);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" /> Delete
+                </Button>
+              )}
+              <Button
+                size="sm"
+                onClick={() => {
+                  onSave(draft);
+                  onOpenChange(false);
+                }}
+              >
+                <Save className="h-4 w-4" /> Save
+              </Button>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );

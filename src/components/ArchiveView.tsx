@@ -13,6 +13,7 @@ import { toast } from "sonner";
 type Props = {
   concerts: Concert[];
   onSaveConcert: (concert: Concert) => void;
+  onDeleteConcert: (id: string) => void;
   selectedArtist: string | null;
   onClearArtist: () => void;
   recordingCache: Map<string, RecordingEntry>;
@@ -27,6 +28,7 @@ type Props = {
 export const ArchiveView = ({
   concerts,
   onSaveConcert,
+  onDeleteConcert,
   selectedArtist,
   onClearArtist,
   recordingCache,
@@ -200,8 +202,8 @@ export const ArchiveView = ({
         open={!!openId}
         onOpenChange={(o) => !o && setOpenId(null)}
         onSave={onSaveConcert}
-        onDelete={undefined}
-        canDelete={false}
+        onDelete={onDeleteConcert}
+        canDelete={true}
         recordingEntry={open ? recordingCache.get(open.id) : undefined}
         currentTrack={currentTrack}
         isPlaying={isPlaying}

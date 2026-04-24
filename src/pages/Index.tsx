@@ -28,7 +28,7 @@ const Index = () => {
   const queryClient = useQueryClient();
   const { user, loading: authLoading, signOut } = useAuth();
   const { needsUsernameSetup, profile } = useProfile();
-  const { concerts, loading: archiveLoading, saveAttendance } = useArchive();
+  const { concerts, loading: archiveLoading, saveAttendance, removeAttendance } = useArchive();
   const { items: upcomingItems, removeUpcoming } = useUpcoming();
   const { items: wishlistItems } = useWishlist();
   const [view, setView] = useState<ViewKey>("archive");
@@ -107,6 +107,14 @@ const Index = () => {
     );
   }, [saveAttendance]);
 
+  const handleDeleteConcert = useCallback((id: string) => {
+    removeAttendance.mutate(id, {
+      onSuccess: () => toast.success("Show removed from archive"),
+      onError: (e) =>
+        toast.error(e instanceof Error ? e.message : "Couldn't remove show"),
+    });
+  }, [removeAttendance]);
+
   // ── Mark upcoming show as attended ────────────────────────────────────────────
   // Removes from upcoming_shows. If the item has a showId, logs attendance.
   // If not (manually added upcoming shows), just removes and prompts the user.
@@ -128,6 +136,16 @@ const Index = () => {
   }), [concerts]);
 
   // ── Auth gates ────────────────────────────────────────────────────────────────
+  // Full-page landing for logged-out users — no sidebar, no Bob's stats.
+  if (!authLoading && !user) {
+    return (
+      <>
+        <LandingView onSignIn={() => setShowAuthModal(true)} />
+        <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+      </>
+    );
+  }
+
   // !!user guard on username check: TanStack Query caches profile data for gcTime
   // (10 min) after sign-out. Without !!user, a signed-out user with a cached temp
   // username would see the username setup screen.
@@ -136,7 +154,7 @@ const Index = () => {
   }
 
   const titleByView: Record<ViewKey, { eyebrow: string; title: string; sub: string }> = {
-    archive:  { eyebrow: "Volume I",   title: "The Archive",     sub: "Every show, catalogued and dated." },
+    archive:  { eyebrow: "Beta Version 0.01", title: "The Archive",     sub: "" },
     stats:    { eyebrow: "Volume II",  title: "By the Numbers",  sub: "Patterns drawn from the ledger." },
     upcoming: { eyebrow: "Volume III", title: "On the Horizon",  sub: "Tickets in hand, dates circled." },
     wishlist: { eyebrow: "Volume IV",  title: "The Wishlist",    sub: "Shows you'd cross a state line for." },
@@ -196,84 +214,76 @@ const Index = () => {
             </div>
           </header>
 
-          {/* Logged-out users see the landing view */}
-          {!authLoading && !user ? (
-            <LandingView onSignIn={() => setShowAuthModal(true)} />
-          ) : (
-            <>
-              {/* Global stats strip — only shown when authenticated */}
-              {user && (
-                <div className="border-b-2 border-ink bg-card">
-                  <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-6">
-                    {[
-                      { val: globalStats.shows,   label: "Shows" },
-                      { val: globalStats.artists, label: "Artists" },
-                      { val: globalStats.venues,  label: "Venues" },
-                      { val: globalStats.years,   label: "Years" },
-                    ].map(({ val, label }) => (
-                      <div key={label} className="flex flex-col items-center px-6 py-3 first:pl-0 last:pr-0">
-                        <span className="font-mono text-xl font-semibold leading-none">{val}</span>
-                        <span className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
-                      </div>
-                    ))}
-                  </div>
+          {/* Global stats strip */}
+          <div className="border-b-2 border-ink bg-card">
+            <div className="mx-auto flex max-w-5xl divide-x-2 divide-ink px-6">
+              {[
+                { val: globalStats.shows,   label: "Shows" },
+                { val: globalStats.artists, label: "Artists" },
+                { val: globalStats.venues,  label: "Venues" },
+                { val: globalStats.years,   label: "Years" },
+              ].map(({ val, label }) => (
+                <div key={label} className="flex flex-col items-center px-6 py-3 first:pl-0 last:pr-0">
+                  <span className="font-mono text-xl font-semibold leading-none">{val}</span>
+                  <span className="mt-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <main className="flex-1 overflow-auto px-6 py-8">
+            <div className="mx-auto max-w-5xl space-y-8">
+              <div>
+                <div className="stamp">{head.eyebrow}</div>
+                <h1 className="mt-1 font-display text-5xl leading-none sm:text-6xl">
+                  {head.title}
+                </h1>
+                <p className="mt-3 max-w-xl text-muted-foreground italic">{head.sub}</p>
+                <div className="brass-rule mt-5" />
+              </div>
+
+              {/* Archive loading state — shown while Supabase query resolves */}
+              {view === "archive" && archiveLoading && (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-28 animate-pulse rounded-sm border-2 border-ink bg-card opacity-50"
+                    />
+                  ))}
                 </div>
               )}
 
-              <main className="flex-1 overflow-auto px-6 py-8">
-                <div className="mx-auto max-w-5xl space-y-8">
-                  <div>
-                    <div className="stamp">{head.eyebrow}</div>
-                    <h1 className="mt-1 font-display text-5xl leading-none sm:text-6xl">
-                      {head.title}
-                    </h1>
-                    <p className="mt-3 max-w-xl text-muted-foreground italic">{head.sub}</p>
-                    <div className="brass-rule mt-5" />
-                  </div>
+              {view === "archive" && !archiveLoading && (
+                <ArchiveView
+                  concerts={concerts}
+                  onSaveConcert={handleSaveConcert}
+                  onDeleteConcert={handleDeleteConcert}
+                  selectedArtist={selectedArtist}
+                  onClearArtist={() => setSelectedArtist(null)}
+                  recordingCache={recordingCache}
+                  hasRecording={hasRecording}
+                  onFetchRecording={fetchRecording}
+                  currentTrack={currentTrack}
+                  isPlaying={isPlaying}
+                  onPlayTrack={handlePlay}
+                  onToggleTrack={handleToggle}
+                />
+              )}
+              {view === "stats"    && <Stats concerts={concerts} />}
+              {view === "upcoming" && <UpcomingView onAttend={handleAttend} />}
+              {view === "wishlist" && <WishlistView />}
+            </div>
+          </main>
 
-                  {/* Archive loading state — shown while Supabase query resolves */}
-                  {view === "archive" && archiveLoading && (
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {Array.from({ length: 6 }).map((_, i) => (
-                        <div
-                          key={i}
-                          className="h-28 animate-pulse rounded-sm border-2 border-ink bg-card opacity-50"
-                        />
-                      ))}
-                    </div>
-                  )}
-
-                  {view === "archive" && !archiveLoading && (
-                    <ArchiveView
-                      concerts={concerts}
-                      onSaveConcert={handleSaveConcert}
-                      selectedArtist={selectedArtist}
-                      onClearArtist={() => setSelectedArtist(null)}
-                      recordingCache={recordingCache}
-                      hasRecording={hasRecording}
-                      onFetchRecording={fetchRecording}
-                      currentTrack={currentTrack}
-                      isPlaying={isPlaying}
-                      onPlayTrack={handlePlay}
-                      onToggleTrack={handleToggle}
-                    />
-                  )}
-                  {view === "stats"    && <Stats concerts={concerts} />}
-                  {view === "upcoming" && <UpcomingView onAttend={handleAttend} />}
-                  {view === "wishlist" && <WishlistView />}
-                </div>
-              </main>
-
-              <footer className={`border-t-2 border-ink px-6 py-4 ${currentTrack ? "pb-20" : ""}`}>
-                <div className="mx-auto flex max-w-5xl items-center justify-between">
-                  <div className="stamp">WookBook · est. {new Date().getFullYear()}</div>
-                  <div className="font-mono text-[10px] text-muted-foreground">
-                    Pressed in oxblood &amp; bone
-                  </div>
-                </div>
-              </footer>
-            </>
-          )}
+          <footer className={`border-t-2 border-ink px-6 py-4 ${currentTrack ? "pb-20" : ""}`}>
+            <div className="mx-auto flex max-w-5xl items-center justify-between">
+              <div className="stamp">WookBook · est. {new Date().getFullYear()}</div>
+              <div className="font-mono text-[10px] text-muted-foreground">
+                Pressed in oxblood &amp; bone
+              </div>
+            </div>
+          </footer>
         </div>
       </div>
 

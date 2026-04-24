@@ -135,10 +135,43 @@ export function useArchive() {
     },
   });
 
+  const removeAttendance = useMutation({
+    mutationFn: async (showId: string) => {
+      if (!user) throw new Error("Not authenticated");
+      const { error } = await supabase
+        .from("attendances")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("show_id", showId);
+      if (error) throw error;
+    },
+
+    onMutate: async (showId) => {
+      await queryClient.cancelQueries({ queryKey: queryKeys.archive(user?.id) });
+      const previous = queryClient.getQueryData<Concert[]>(queryKeys.archive(user?.id));
+      queryClient.setQueryData<Concert[]>(
+        queryKeys.archive(user?.id),
+        (old = []) => old.filter((c) => c.id !== showId)
+      );
+      return { previous };
+    },
+
+    onError: (_err, _vars, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData(queryKeys.archive(user?.id), context.previous);
+      }
+    },
+
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.archive(user?.id) });
+    },
+  });
+
   return {
     concerts:        archiveQuery.data ?? [],
     loading:         archiveQuery.isLoading,
     error:           archiveQuery.error,
     saveAttendance,
+    removeAttendance,
   };
 }
