@@ -64,16 +64,11 @@ export const DiscoverView = ({ concerts }: Props) => {
     });
   }, [watchedLoading, watchedArtists.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Tour events — all upcoming, fresh for 30 min
+  // Tour events — per-user matches via RPC, fresh for 30 min
   const { data: events, isLoading: eventsLoading } = useQuery({
     queryKey: queryKeys.tourEvents(),
     queryFn: async (): Promise<TourEvent[]> => {
-      const today = new Date().toISOString().slice(0, 10);
-      const { data, error } = await supabase
-        .from("tour_events")
-        .select("*")
-        .gte("date", today)
-        .order("date", { ascending: true });
+      const { data, error } = await supabase.rpc("get_user_tour_events");
       if (error) throw error;
       return (data ?? []) as TourEvent[];
     },

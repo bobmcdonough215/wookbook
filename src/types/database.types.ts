@@ -199,34 +199,43 @@ export type Database = {
       }
       profiles: {
         Row: {
-          avatar_url: string | null
-          bio: string | null
-          created_at: string
+          avatar_url:   string | null
+          bio:          string | null
+          created_at:   string
           display_name: string | null
-          home_city: string | null
-          id: string
-          is_public: boolean
-          username: string
+          home_city:    string | null
+          home_lat:     number | null   // populated by api/geocode.ts after home_city save
+          home_lng:     number | null   // populated by api/geocode.ts after home_city save
+          id:           string
+          is_public:    boolean
+          ntfy_topic:   string | null   // per-user Ntfy channel name, set in profile settings
+          username:     string
         }
         Insert: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
+          avatar_url?:   string | null
+          bio?:          string | null
+          created_at?:   string
           display_name?: string | null
-          home_city?: string | null
-          id: string
-          is_public?: boolean
-          username: string
+          home_city?:    string | null
+          home_lat?:     number | null
+          home_lng?:     number | null
+          id:            string
+          is_public?:    boolean
+          ntfy_topic?:   string | null
+          username:      string
         }
         Update: {
-          avatar_url?: string | null
-          bio?: string | null
-          created_at?: string
+          avatar_url?:   string | null
+          bio?:          string | null
+          created_at?:   string
           display_name?: string | null
-          home_city?: string | null
-          id?: string
-          is_public?: boolean
-          username?: string
+          home_city?:    string | null
+          home_lat?:     number | null
+          home_lng?:     number | null
+          id?:           string
+          is_public?:    boolean
+          ntfy_topic?:   string | null
+          username?:     string
         }
         Relationships: []
       }
@@ -285,100 +294,100 @@ export type Database = {
       }
       tour_events: {
         Row: {
-          artist_name: string
-          date: string
-          drive_hours: number | null
-          external_id: string
-          fetched_at: string
-          id: string
-          is_festival: boolean
-          is_home_market: boolean
-          raw: Json | null
-          source: string
-          ticket_url: string | null
-          venue_city: string | null
-          venue_lat: number | null
-          venue_lng: number | null
-          venue_name: string | null
-          venue_state: string | null
+          artist_name:    string
+          date:           string
+          drive_hours:    number | null   // legacy — kept for backward compat, not used by UI after RPC migration
+          external_id:    string
+          fetched_at:     string
+          id:             string
+          is_festival:    boolean
+          is_home_market: boolean         // legacy — kept for backward compat, not used by UI after RPC migration
+          raw:            Json | null
+          source:         string
+          ticket_url:     string | null
+          venue_city:     string | null
+          venue_lat:      number | null
+          venue_lng:      number | null
+          venue_name:     string | null
+          venue_state:    string | null
         }
         Insert: {
-          artist_name: string
-          date: string
-          drive_hours?: number | null
-          external_id: string
-          fetched_at?: string
-          id?: string
-          is_festival?: boolean
+          artist_name:     string
+          date:            string
+          drive_hours?:    number | null
+          external_id:     string
+          fetched_at?:     string
+          id?:             string
+          is_festival?:    boolean
           is_home_market?: boolean
-          raw?: Json | null
-          source: string
-          ticket_url?: string | null
-          venue_city?: string | null
-          venue_lat?: number | null
-          venue_lng?: number | null
-          venue_name?: string | null
-          venue_state?: string | null
+          raw?:            Json | null
+          source:          string
+          ticket_url?:     string | null
+          venue_city?:     string | null
+          venue_lat?:      number | null
+          venue_lng?:      number | null
+          venue_name?:     string | null
+          venue_state?:    string | null
         }
         Update: {
-          artist_name?: string
-          date?: string
-          drive_hours?: number | null
-          external_id?: string
-          fetched_at?: string
-          id?: string
-          is_festival?: boolean
+          artist_name?:    string
+          date?:           string
+          drive_hours?:    number | null
+          external_id?:    string
+          fetched_at?:     string
+          id?:             string
+          is_festival?:    boolean
           is_home_market?: boolean
-          raw?: Json | null
-          source?: string
-          ticket_url?: string | null
-          venue_city?: string | null
-          venue_lat?: number | null
-          venue_lng?: number | null
-          venue_name?: string | null
-          venue_state?: string | null
+          raw?:            Json | null
+          source?:         string
+          ticket_url?:     string | null
+          venue_city?:     string | null
+          venue_lat?:      number | null
+          venue_lng?:      number | null
+          venue_name?:     string | null
+          venue_state?:    string | null
         }
         Relationships: []
       }
       upcoming_shows: {
         Row: {
-          artist: string
-          city: string | null
+          artist:     string
+          city:       string | null
           created_at: string
-          date: string
-          id: string
-          notes: string | null
-          show_id: string | null
-          state: string | null
+          date:       string
+          id:         string
+          notes:      string | null
+          show_id:    string | null
+          state:      string | null
           ticket_url: string | null
-          user_id: string
-          venue: string | null
+          user_id:    string
+          venue:      string | null
         }
         Insert: {
-          artist: string
-          city?: string | null
+          artist:      string
+          city?:       string | null
           created_at?: string
-          date: string
-          id?: string
-          notes?: string | null
-          show_id?: string | null
-          state?: string | null
+          date:        string
+          id?:         string
+          notes?:      string | null
+          show_id?:    string | null
+          state?:      string | null
           ticket_url?: string | null
-          user_id: string
-          venue?: string | null
+          user_id:     string
+          venue?:      string | null
         }
         Update: {
-          artist?: string
-          city?: string | null
+          artist?:     string
+          city?:       string | null
           created_at?: string
-          date?: string
-          id?: string
-          notes?: string | null
-          show_id?: string | null
-          state?: string | null
+          date?:       string
+          id?:         string
+          notes?:      string | null
+          show_id?:    string | null
+          state?:      string | null
           ticket_url?: string | null
-          user_id?: string
-          venue?: string | null
+          user_id?:    string
+          venue?:      string | null
         }
         Relationships: [
           {
@@ -404,39 +413,84 @@ export type Database = {
           },
         ]
       }
-      watched_artists: {
+      user_event_matches: {
         Row: {
-          artist_name: string
-          auto_watched: boolean
-          created_at: string
-          id: string
-          last_notified: string | null
-          muted: boolean
-          relisten_slug: string | null
-          show_count: number
-          user_id: string
+          id:             string
+          user_id:        string
+          tour_event_id:  string
+          drive_hours:    number | null
+          is_home_market: boolean
+          notified_at:    string | null
+          created_at:     string
         }
         Insert: {
-          artist_name: string
-          auto_watched?: boolean
-          created_at?: string
-          id?: string
-          last_notified?: string | null
-          muted?: boolean
-          relisten_slug?: string | null
-          show_count?: number
-          user_id: string
+          id?:             string
+          user_id:         string
+          tour_event_id:   string
+          drive_hours?:    number | null
+          is_home_market?: boolean
+          notified_at?:    string | null
+          created_at?:     string
         }
         Update: {
-          artist_name?: string
-          auto_watched?: boolean
-          created_at?: string
-          id?: string
+          id?:             string
+          user_id?:        string
+          tour_event_id?:  string
+          drive_hours?:    number | null
+          is_home_market?: boolean
+          notified_at?:    string | null
+          created_at?:     string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_event_matches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_event_matches_tour_event_id_fkey"
+            columns: ["tour_event_id"]
+            isOneToOne: false
+            referencedRelation: "tour_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      watched_artists: {
+        Row: {
+          artist_name:   string
+          auto_watched:  boolean
+          created_at:    string
+          id:            string
+          last_notified: string | null
+          muted:         boolean
+          relisten_slug: string | null
+          show_count:    number
+          user_id:       string
+        }
+        Insert: {
+          artist_name:    string
+          auto_watched?:  boolean
+          created_at?:    string
+          id?:            string
           last_notified?: string | null
-          muted?: boolean
+          muted?:         boolean
           relisten_slug?: string | null
-          show_count?: number
-          user_id?: string
+          show_count?:    number
+          user_id:        string
+        }
+        Update: {
+          artist_name?:   string
+          auto_watched?:  boolean
+          created_at?:    string
+          id?:            string
+          last_notified?: string | null
+          muted?:         boolean
+          relisten_slug?: string | null
+          show_count?:    number
+          user_id?:       string
         }
         Relationships: [
           {
@@ -450,28 +504,28 @@ export type Database = {
       }
       wishlist: {
         Row: {
-          artist: string
+          artist:     string
           created_at: string
-          id: string
-          notes: string | null
-          priority: string
-          user_id: string
+          id:         string
+          notes:      string | null
+          priority:   string
+          user_id:    string
         }
         Insert: {
-          artist: string
+          artist:      string
           created_at?: string
-          id?: string
-          notes?: string | null
-          priority?: string
-          user_id: string
+          id?:         string
+          notes?:      string | null
+          priority?:   string
+          user_id:     string
         }
         Update: {
-          artist?: string
+          artist?:     string
           created_at?: string
-          id?: string
-          notes?: string | null
-          priority?: string
-          user_id?: string
+          id?:         string
+          notes?:      string | null
+          priority?:   string
+          user_id?:    string
         }
         Relationships: [
           {
@@ -487,20 +541,20 @@ export type Database = {
     Views: {
       shows_with_counts: {
         Row: {
-          artist: string | null
+          artist:           string | null
           attendance_count: number | null
-          avg_rating: number | null
-          city: string | null
-          created_at: string | null
-          created_by: string | null
-          date: string | null
-          event: string | null
-          id: string | null
-          legacy_id: string | null
-          source: string | null
-          special_notes: string | null
-          state: string | null
-          venue: string | null
+          avg_rating:       number | null
+          city:             string | null
+          created_at:       string | null
+          created_by:       string | null
+          date:             string | null
+          event:            string | null
+          id:               string | null
+          legacy_id:        string | null
+          source:           string | null
+          special_notes:    string | null
+          state:            string | null
+          venue:            string | null
         }
         Relationships: [
           {
@@ -517,19 +571,35 @@ export type Database = {
       get_user_archive: {
         Args: { p_user_id: string }
         Returns: {
-          added_at: string
-          artist: string
+          added_at:         string
+          artist:           string
           attendance_count: number
-          city: string
-          date: string
-          event: string
-          memory: string
-          memory_public: boolean
-          rating: number
-          show_id: string
-          special_notes: string
-          state: string
-          venue: string
+          city:             string
+          date:             string
+          event:            string
+          memory:           string
+          memory_public:    boolean
+          rating:           number
+          show_id:          string
+          special_notes:    string
+          state:            string
+          venue:            string
+        }[]
+      }
+      get_user_tour_events: {
+        Args: Record<string, never>   // no args — uses auth.uid() internally
+        Returns: {
+          id:             string
+          artist_name:    string
+          date:           string
+          venue_name:     string | null
+          venue_city:     string | null
+          venue_state:    string | null
+          ticket_url:     string | null
+          is_festival:    boolean
+          is_home_market: boolean   // from user_event_matches
+          drive_hours:    number | null   // from user_event_matches
+          source:         string
         }[]
       }
       show_limit: { Args: never; Returns: number }
