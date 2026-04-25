@@ -9,7 +9,7 @@ VALUES
   ('dummy:001', 'jambase', 'Phish',                    '2026-07-04', 'Wells Fargo Center',    'Philadelphia',    'PA', 39.9012,  -75.1720,  'https://www.ticketmaster.com', false, true,  0.0),
   ('dummy:002', 'jambase', 'Goose',                    '2026-06-20', 'The Met Philadelphia',  'Philadelphia',    'PA', 39.9601,  -75.1580,  'https://www.ticketmaster.com', false, true,  0.0),
   ('dummy:003', 'jambase', 'Billy Strings',            '2026-07-12', 'Freedom Mortgage Pavilion', 'Camden',      'NJ', 39.9462,  -75.1307,  'https://www.livenation.com',   false, true,  0.2),
-  ('dummy:004', 'jambase', 'Widespread Panic',         '2026-08-01', 'Red Rocks Amphitheatre','Morrison',        'CO', 39.6654,  -105.2057, 'https://www.axs.com',          false, true,  null),
+  ('dummy:004', 'jambase', 'Widespread Panic',         '2026-08-01', 'Red Rocks Amphitheatre','Morrison',        'CO', 39.6654,  -105.2057, 'https://www.axs.com',          false, false, null),
   ('dummy:005', 'jambase', 'String Cheese Incident',   '2026-09-05', 'Bethel Woods Center',   'Bethel',          'NY', 41.6868,  -74.8906,  'https://www.etix.com',         false, true,  1.5),
   ('dummy:006', 'jambase', 'Joe Russo''s Almost Dead', '2026-06-28', 'Brooklyn Steel',        'New York',        'NY', 40.7128,  -74.0060,  'https://www.ticketmaster.com', false, true,  2.0),
   ('dummy:007', 'jambase', 'Lotus',                    '2026-07-19', 'Fillmore Philadelphia', 'Philadelphia',    'PA', 39.9530,  -75.1598,  'https://www.livenation.com',   false, true,  0.0),

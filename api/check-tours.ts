@@ -14,11 +14,9 @@ const HOME_MARKETS = [
   { city: "philadelphia",    state: "pa" },
   { city: "camden",          state: "nj" },
   { city: "new york",        state: "ny" },
-  { city: "atlantic city",   state: "nj" },
   { city: "holmdel",         state: "nj" },
   { city: "saratoga springs",state: "ny" },
   { city: "bethel",          state: "ny" },
-  { city: "morrison",        state: "co" }, // Red Rocks — worth the trip
 ];
 
 const AddressSchema = z.object({
