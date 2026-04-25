@@ -182,11 +182,13 @@ export default async function handler(req: Request) {
     existingMatchKeys.add(`${m.user_id}:${m.tour_event_id}`);
   }
 
+  const knownExternalIds = new Set(eventIdByExternalId.keys());
+
   let totalNewEvents = 0;
   let totalNewMatches = 0;
 
   for (const hub of HUBS) {
-    const rawEvents = await fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI);
+    const rawEvents = await fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI, knownExternalIds);
 
     for (const rawEvent of rawEvents) {
       const parsed = JambaseEventSchema.safeParse(rawEvent);
@@ -389,11 +391,19 @@ function primaryPerformerName(ev: JambaseEvent): string {
   return headliner?.name ?? performers[0]?.name ?? "Unknown Artist";
 }
 
+const STALE_THRESHOLD = 15;
+
 /**
  * Paginated JamBase geo query. Returns raw event objects.
- * Bails early on non-200 response.
+ * Bails early when STALE_THRESHOLD consecutive known events are seen —
+ * avoids fetching deep pages that are almost entirely already in our DB.
  */
-async function fetchJambaseGeo(lat: number, lng: number, radiusMi: number): Promise<unknown[]> {
+async function fetchJambaseGeo(
+  lat: number,
+  lng: number,
+  radiusMi: number,
+  knownExternalIds: Set<string>
+): Promise<unknown[]> {
   if (!process.env.JAMBASE_KEY) return [];
 
   const today = new Date().toISOString().slice(0, 10);
@@ -421,7 +431,27 @@ async function fetchJambaseGeo(lat: number, lng: number, radiusMi: number): Prom
 
     if (!res.ok) break;
     const data = await res.json();
-    all.push(...(Array.isArray(data.events) ? data.events : []));
+    const events: unknown[] = Array.isArray(data.events) ? data.events : [];
+
+    let consecutiveKnown = 0;
+    let bailed = false;
+
+    for (const ev of events) {
+      const id = (ev as any)?.identifier;
+      if (id && knownExternalIds.has(id)) {
+        consecutiveKnown++;
+        if (consecutiveKnown >= STALE_THRESHOLD) {
+          bailed = true;
+          break;
+        }
+      } else {
+        consecutiveKnown = 0;
+      }
+      all.push(ev);
+    }
+
+    if (bailed) break;
+
     totalPages = data.pagination?.totalPages ?? 1;
     page++;
   } while (page <= totalPages);
