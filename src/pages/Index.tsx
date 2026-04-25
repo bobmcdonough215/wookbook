@@ -13,6 +13,7 @@ import { queryKeys } from "@/lib/queryKeys";
 import { useRecordings } from "@/hooks/useRecordings";
 import { useRecordingPlayer } from "@/hooks/useRecordingPlayer";
 import { AuthModal } from "@/components/AuthModal";
+import { ProfileSettingsModal } from "@/components/ProfileSettingsModal";
 import { LandingView } from "@/components/LandingView";
 import { UsernameSetupModal } from "@/components/UsernameSetupModal";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -37,6 +38,7 @@ const Index = () => {
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // ── One-time localStorage migration ───────────────────────────────────────────
   // Runs on first login after Session D. The migration function is idempotent —
@@ -190,8 +192,9 @@ const Index = () => {
               <div className="ml-auto flex items-center gap-3">
                 {user && profile ? (
                   <button
+                    onClick={() => setShowSettingsModal(true)}
                     className="stamp text-primary hover:underline transition-colors"
-                    title="Profile settings — coming soon"
+                    title="Profile settings"
                   >
                     @{profile.username}
                   </button>
@@ -311,6 +314,7 @@ const Index = () => {
       )}
 
       <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+      <ProfileSettingsModal open={showSettingsModal} onOpenChange={setShowSettingsModal} />
     </SidebarProvider>
   );
 };
