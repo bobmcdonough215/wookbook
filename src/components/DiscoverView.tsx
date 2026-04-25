@@ -307,7 +307,7 @@ const TourEventCard = ({ event, decision, onInterested, onPass, onIgnore, isPend
               size="sm"
               variant={decision === "interested" ? "default" : "outline"}
               onClick={onInterested}
-              disabled={isPending || decision === "interested"}
+              disabled={isPending}
               className="gap-1.5"
             >
               <ThumbsUp className="h-3.5 w-3.5" />
