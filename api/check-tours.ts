@@ -227,7 +227,6 @@ export default async function handler(req: Request) {
             // Legacy columns — kept for now, no longer used by UI after RPC migration
             is_home_market: false,
             drive_hours:    null,
-            raw:            ev,
           })
           .select("id")
           .single();

@@ -32,8 +32,8 @@
       "schedule": "0 9 * * *"
     },
     {
-      "path": "/api/check-tours-weekly",
-      "schedule": "0 10 * * 1"
+      "path": "/api/cleanup-tours",
+      "schedule": "0 3 1 * *"
     }
   ]
 }

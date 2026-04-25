@@ -302,7 +302,6 @@ export type Database = {
           id:             string
           is_festival:    boolean
           is_home_market: boolean         // legacy — kept for backward compat, not used by UI after RPC migration
-          raw:            Json | null
           source:         string
           ticket_url:     string | null
           venue_city:     string | null
@@ -320,7 +319,6 @@ export type Database = {
           id?:             string
           is_festival?:    boolean
           is_home_market?: boolean
-          raw?:            Json | null
           source:          string
           ticket_url?:     string | null
           venue_city?:     string | null
@@ -338,7 +336,6 @@ export type Database = {
           id?:             string
           is_festival?:    boolean
           is_home_market?: boolean
-          raw?:            Json | null
           source?:         string
           ticket_url?:     string | null
           venue_city?:     string | null
