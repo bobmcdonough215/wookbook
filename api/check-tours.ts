@@ -76,18 +76,18 @@ const JambaseEventSchema = z.object({
 
 type JambaseEvent = z.infer<typeof JambaseEventSchema>;
 
+const HOME_MARKET_RADIUS_MI = 60;
+
 // ---------------------------------------------------------------------------
 // User shape loaded from DB
 // ---------------------------------------------------------------------------
 type UserRecord = {
-  id:          string;
-  home_lat:    number;
-  home_lng:    number;
-  ntfy_topic:  string | null;
+  id:         string;
+  home_lat:   number;
+  home_lng:   number;
+  ntfy_topic: string | null;
   // lowercase artist name → original casing
-  watchedMap:  Map<string, string>;
-  // set of home market city strings for this user e.g. "philadelphia|pa"
-  homeMarkets: Set<string>;
+  watchedMap: Map<string, string>;
 };
 
 // ---------------------------------------------------------------------------
@@ -139,12 +139,11 @@ export default async function handler(req: Request) {
   const users: UserRecord[] = profiles
     .filter((p) => watchedByUser.has(p.id))
     .map((p) => ({
-      id:          p.id,
-      home_lat:    p.home_lat!,
-      home_lng:    p.home_lng!,
-      ntfy_topic:  p.ntfy_topic ?? null,
-      watchedMap:  watchedByUser.get(p.id)!,
-      homeMarkets: buildHomeMarkets(p.home_lat!, p.home_lng!),
+      id:         p.id,
+      home_lat:   p.home_lat!,
+      home_lng:   p.home_lng!,
+      ntfy_topic: p.ntfy_topic ?? null,
+      watchedMap: watchedByUser.get(p.id)!,
     }));
 
   if (!users.length) {
@@ -255,9 +254,7 @@ export default async function handler(req: Request) {
         const venueLng = ev.location?.geo?.longitude ?? null;
         const driveHours = await getDriveHours(user.home_lat, user.home_lng, venueLat, venueLng);
 
-        const city  = ev.location?.address?.addressLocality?.toLowerCase() ?? "";
-        const state = ev.location?.address?.addressRegion?.alternateName?.toLowerCase() ?? "";
-        const isHome = user.homeMarkets.has(`${city}|${state}`);
+        const isHome = isHomeMarket(user.home_lat, user.home_lng, venueLat, venueLng);
 
         const { error: matchError } = await supabase
           .from("user_event_matches")
@@ -312,49 +309,20 @@ export default async function handler(req: Request) {
 // ---------------------------------------------------------------------------
 
 /**
- * Build a set of "city|state" strings considered home markets for a user,
- * based on their geocoded home coordinates.
- *
- * We derive home markets by reverse-proximity: any city within ~50mi of
- * the user's home is considered their home market. For now we use a small
- * hardcoded radius check — this can be replaced with a real reverse-geocode
- * call to Nominatim if more precision is needed.
- *
- * The set uses lowercase "city|state" keys to match venue data from JamBase.
+ * Returns true if the venue is within HOME_MARKET_RADIUS_MI of the user's home.
+ * Uses the equirectangular approximation — accurate enough at the distances involved.
+ * Falls back to false if venue coordinates are unavailable.
  */
-function buildHomeMarkets(homeLat: number, homeLng: number): Set<string> {
-  // Well-known metro clusters with their anchor city strings as JamBase returns them.
-  // Each entry: [lat, lng, [...city|state pairs in that metro]]
-  const METRO_CLUSTERS: [number, number, string[]][] = [
-    [39.95, -75.17, ["philadelphia|pa", "camden|nj", "holmdel|nj"]],
-    [40.71, -74.01, ["new york|ny", "brooklyn|ny", "newark|nj"]],
-    [42.36, -71.06, ["boston|ma", "mansfield|ma", "gilford|nh"]],
-    [41.88, -87.63, ["chicago|il", "tinley park|il", "wheatland township|il"]],
-    [37.77, -122.42, ["san francisco|ca", "mountain view|ca", "berkeley|ca"]],
-    [34.05, -118.24, ["los angeles|ca", "inglewood|ca", "chula vista|ca"]],
-    [47.61, -122.33, ["seattle|wa", "auburn|wa", "george|wa"]],
-    [33.75, -84.39, ["atlanta|ga", "alpharetta|ga", "duluth|ga"]],
-    [29.76, -95.37, ["houston|tx", "the woodlands|tx"]],
-    [32.78, -96.80, ["dallas|tx", "fort worth|tx", "irving|tx"]],
-    [39.74, -104.98, ["denver|co", "morrison|co", "commerce city|co"]],
-    [25.77, -80.19, ["miami|fl", "miami gardens|fl", "west palm beach|fl"]],
-    [36.17, -86.78, ["nashville|tn", "franklin|tn"]],
-    [35.23, -80.84, ["charlotte|nc", "concord|nc"]],
-    [45.52, -122.68, ["portland|or", "ridgefield|wa"]],
-  ];
-
-  const HOME_MARKET_RADIUS_DEG = 0.8; // ~55 miles — rough but fast, no trig needed
-  const markets = new Set<string>();
-
-  for (const [clusterLat, clusterLng, cities] of METRO_CLUSTERS) {
-    const dLat = Math.abs(homeLat - clusterLat);
-    const dLng = Math.abs(homeLng - clusterLng);
-    if (dLat <= HOME_MARKET_RADIUS_DEG && dLng <= HOME_MARKET_RADIUS_DEG) {
-      for (const city of cities) markets.add(city);
-    }
-  }
-
-  return markets;
+function isHomeMarket(
+  homeLat: number,
+  homeLng: number,
+  venueLat: number | null,
+  venueLng: number | null
+): boolean {
+  if (venueLat == null || venueLng == null) return false;
+  const dLat = (venueLat - homeLat) * 69;
+  const dLng = (venueLng - homeLng) * Math.cos(homeLat * Math.PI / 180) * 69;
+  return Math.sqrt(dLat * dLat + dLng * dLng) <= HOME_MARKET_RADIUS_MI;
 }
 
 /**
