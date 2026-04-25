@@ -185,9 +185,16 @@ export default async function handler(req: Request) {
 
   let totalNewEvents = 0;
   let totalNewMatches = 0;
+  const errors: string[] = [];
 
   for (const hub of HUBS) {
-    const rawEvents = await fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI, knownExternalIds);
+    let rawEvents: unknown[];
+    try {
+      rawEvents = await fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI, knownExternalIds);
+    } catch (e) {
+      errors.push(`hub:${hub.name}: ${e instanceof Error ? e.message : String(e)}`);
+      continue;
+    }
 
     for (const rawEvent of rawEvents) {
       const parsed = JambaseEventSchema.safeParse(rawEvent);
@@ -210,12 +217,11 @@ export default async function handler(req: Request) {
         const primaryOffer = (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary");
         const ticketUrl = primaryOffer?.url ?? ev.url ?? null;
 
-        const { data: inserted } = await supabase
+        const { data: inserted, error: insertError } = await supabase
           .from("tour_events")
           .insert({
             external_id:    ev.identifier,
             source:         "jambase",
-            // Store primary performer name — matchWatchedArtist resolves this per-user below
             artist_name:    primaryPerformerName(ev),
             date,
             venue_name:     ev.location?.name ?? null,
@@ -225,13 +231,16 @@ export default async function handler(req: Request) {
             venue_lng:      lng,
             ticket_url:     ticketUrl,
             is_festival:    ev.type === "Festival",
-            // Legacy columns — kept for now, no longer used by UI after RPC migration
             is_home_market: false,
             drive_hours:    null,
           })
           .select("id")
           .single();
 
+        if (insertError) {
+          errors.push(`insert:${ev.identifier}: ${insertError.message}`);
+          continue;
+        }
         if (!inserted) continue;
 
         tourEventId = inserted.id as string;
@@ -246,14 +255,12 @@ export default async function handler(req: Request) {
         const matchedArtist = matchWatchedArtist(ev, user.watchedMap);
         if (!matchedArtist) continue;
 
-        // Skip if match already exists — local Set check, zero DB round-trips
         const matchKey = `${user.id}:${tourEventId}`;
         if (existingMatchKeys.has(matchKey)) continue;
 
         const venueLat = ev.location?.geo?.latitude ?? null;
         const venueLng = ev.location?.geo?.longitude ?? null;
         const driveHours = await getDriveHours(user.home_lat, user.home_lng, venueLat, venueLng);
-
         const isHome = isHomeMarket(user.home_lat, user.home_lng, venueLat, venueLng);
 
         const { error: matchError } = await supabase
@@ -266,9 +273,11 @@ export default async function handler(req: Request) {
             notified_at:    null,
           }, { onConflict: "user_id,tour_event_id" });
 
-        if (matchError) continue;
+        if (matchError) {
+          errors.push(`match:${user.id}:${tourEventId}: ${matchError.message}`);
+          continue;
+        }
 
-        // Register in the Set so subsequent hubs don't re-process this match
         existingMatchKeys.add(matchKey);
         totalNewMatches++;
 
@@ -283,14 +292,13 @@ export default async function handler(req: Request) {
             priority: "high",
           });
 
-          // Mark notified_at so we don't re-notify for the same event
           await supabase
             .from("user_event_matches")
             .update({ notified_at: new Date().toISOString() })
             .eq("user_id", user.id)
             .eq("tour_event_id", tourEventId);
 
-          await sleep(200); // ntfy rate limit
+          await sleep(200);
         }
       }
     }
@@ -301,6 +309,7 @@ export default async function handler(req: Request) {
     users:     users.length,
     newEvents: totalNewEvents,
     matches:   totalNewMatches,
+    errors:    errors.length ? errors : undefined,
   });
 }
 
@@ -440,9 +449,13 @@ async function getDriveHours(
 ): Promise<number | null> {
   if (!toLat || !toLng || !process.env.ORS_KEY) return null;
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
     const res = await fetch(
-      `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${process.env.ORS_KEY}&start=${fromLng},${fromLat}&end=${toLng},${toLat}`
+      `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${process.env.ORS_KEY}&start=${fromLng},${fromLat}&end=${toLng},${toLat}`,
+      { signal: controller.signal }
     );
+    clearTimeout(timeout);
     if (!res.ok) return null;
     const data = await res.json();
     const seconds = data.features?.[0]?.properties?.segments?.[0]?.duration;
