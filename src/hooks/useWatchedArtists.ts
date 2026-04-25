@@ -23,6 +23,8 @@ function toWatchedArtist(row: any): WatchedArtist {
   };
 }
 
+export const WATCHED_LIMIT = 50;
+
 export function useWatchedArtists() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -43,12 +45,28 @@ export function useWatchedArtists() {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Bulk upsert from archive — idempotent, safe to call repeatedly
+  // Bulk upsert from archive — idempotent, safe to call repeatedly.
+  // Respects the 50-artist limit: updates existing watched artists freely,
+  // only adds new ones up to the remaining available slots (top by show count).
   const syncFromArchive = useMutation({
     mutationFn: async (archiveArtists: { name: string; count: number }[]) => {
       if (!user) throw new Error("Not authenticated");
       if (!archiveArtists.length) return;
-      const rows = archiveArtists.map((a) => ({
+
+      const current = query.data ?? [];
+      const currentNames = new Set(current.map((a) => a.artistName.toLowerCase()));
+      const slotsAvailable = Math.max(0, WATCHED_LIMIT - current.length);
+
+      const updates = archiveArtists.filter((a) => currentNames.has(a.name.toLowerCase()));
+      const additions = archiveArtists
+        .filter((a) => !currentNames.has(a.name.toLowerCase()))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, slotsAvailable);
+
+      const toUpsert = [...updates, ...additions];
+      if (!toUpsert.length) return;
+
+      const rows = toUpsert.map((a) => ({
         user_id:      user.id,
         artist_name:  a.name,
         show_count:   a.count,
@@ -59,6 +77,8 @@ export function useWatchedArtists() {
         .from("watched_artists")
         .upsert(rows, { onConflict: "user_id,artist_name", ignoreDuplicates: false });
       if (error) throw error;
+
+      return { added: additions.length, updated: updates.length };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.watchedArtists(user?.id) });
@@ -83,6 +103,10 @@ export function useWatchedArtists() {
   const addArtist = useMutation({
     mutationFn: async (artistName: string) => {
       if (!user) throw new Error("Not authenticated");
+      const current = query.data ?? [];
+      if (current.length >= WATCHED_LIMIT) {
+        throw new Error(`You can watch up to ${WATCHED_LIMIT} artists.`);
+      }
       const { error } = await supabase
         .from("watched_artists")
         .upsert(
@@ -114,6 +138,8 @@ export function useWatchedArtists() {
   return {
     artists:         query.data ?? [],
     loading:         query.isLoading,
+    atLimit:         (query.data ?? []).length >= WATCHED_LIMIT,
+    slotsRemaining:  Math.max(0, WATCHED_LIMIT - (query.data ?? []).length),
     syncFromArchive,
     addArtist,
     toggleMute,

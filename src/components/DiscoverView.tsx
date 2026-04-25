@@ -37,7 +37,7 @@ export const DiscoverView = ({ concerts }: Props) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { addUpcoming } = useUpcoming();
-  const { artists: watchedArtists, loading: watchedLoading, syncFromArchive, addArtist, toggleMute, removeArtist } = useWatchedArtists();
+  const { artists: watchedArtists, loading: watchedLoading, atLimit, slotsRemaining, syncFromArchive, addArtist, toggleMute, removeArtist } = useWatchedArtists();
   const [tab, setTab] = useState<"shows" | "watched">("shows");
 
   // Auto-populate watched artists from archive on first Discover visit
@@ -54,7 +54,13 @@ export const DiscoverView = ({ concerts }: Props) => {
 
     const artists = [...counts.entries()].map(([name, count]) => ({ name, count }));
     syncFromArchive.mutate(artists, {
-      onSuccess: () => toast.success(`Watching ${artists.length} artists from your archive.`),
+      onSuccess: (result) => {
+        const added = result?.added ?? artists.length;
+        const msg = added < artists.length
+          ? `Watching top ${added} artists from your archive (50-artist limit).`
+          : `Watching ${added} artists from your archive.`;
+        toast.success(msg);
+      },
     });
   }, [watchedLoading, watchedArtists.length]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -240,6 +246,8 @@ export const DiscoverView = ({ concerts }: Props) => {
         <WatchedArtistsPanel
           artists={watchedArtists}
           loading={watchedLoading}
+          atLimit={atLimit}
+          slotsRemaining={slotsRemaining}
           concerts={concerts}
           syncFromArchive={syncFromArchive}
           addArtist={addArtist}
@@ -353,6 +361,8 @@ const TourEventCard = ({ event, decision, onInterested, onPass, onIgnore, isPend
 type WatchedArtistsPanelProps = {
   artists:         WatchedArtist[];
   loading:         boolean;
+  atLimit:         boolean;
+  slotsRemaining:  number;
   concerts:        Concert[];
   syncFromArchive: ReturnType<typeof useWatchedArtists>["syncFromArchive"];
   addArtist:       ReturnType<typeof useWatchedArtists>["addArtist"];
@@ -361,7 +371,7 @@ type WatchedArtistsPanelProps = {
 };
 
 const WatchedArtistsPanel = ({
-  artists, loading, concerts, syncFromArchive, addArtist, toggleMute, removeArtist,
+  artists, loading, atLimit, slotsRemaining, concerts, syncFromArchive, addArtist, toggleMute, removeArtist,
 }: WatchedArtistsPanelProps) => {
   const [input, setInput] = useState("");
 
@@ -371,8 +381,8 @@ const WatchedArtistsPanel = ({
     try {
       await addArtist.mutateAsync(name);
       setInput("");
-    } catch {
-      toast.error("Couldn't add artist.");
+    } catch (e: any) {
+      toast.error(e?.message ?? "Couldn't add artist.");
     }
   };
   const handleSync = () => {
@@ -385,8 +395,16 @@ const WatchedArtistsPanel = ({
     const archiveArtists = [...counts.entries()].map(([name, count]) => ({ name, count }));
     if (!archiveArtists.length) return;
     syncFromArchive.mutate(archiveArtists, {
-      onSuccess: () => toast.success("Synced from archive."),
-      onError:   () => toast.error("Sync failed."),
+      onSuccess: (result) => {
+        if (result?.added === 0) {
+          toast.success("Watch list up to date.");
+        } else if (slotsRemaining === 0) {
+          toast.success("Watch list is full — updated existing artists.");
+        } else {
+          toast.success(`Added ${result?.added} artist${result?.added !== 1 ? "s" : ""} from your archive.`);
+        }
+      },
+      onError: () => toast.error("Sync failed."),
     });
   };
 
@@ -397,10 +415,17 @@ const WatchedArtistsPanel = ({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <div className="stamp">Watching {active.length} artist{active.length !== 1 ? "s" : ""}</div>
+          <div className="stamp">
+            {artists.length} / 50 artists
+          </div>
           {muted.length > 0 && (
             <div className="mt-0.5 font-mono text-xs text-muted-foreground">
               {muted.length} muted
+            </div>
+          )}
+          {atLimit && (
+            <div className="mt-0.5 font-mono text-xs text-muted-foreground">
+              limit reached — remove one to add another
             </div>
           )}
         </div>
@@ -420,14 +445,15 @@ const WatchedArtistsPanel = ({
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-          placeholder="Add an artist to watch…"
+          onKeyDown={(e) => e.key === "Enter" && !atLimit && handleAdd()}
+          placeholder={atLimit ? "50-artist limit reached" : "Add an artist to watch…"}
+          disabled={atLimit}
           className="h-8 text-sm"
         />
         <Button
           size="sm"
           onClick={handleAdd}
-          disabled={!input.trim() || addArtist.isPending}
+          disabled={!input.trim() || addArtist.isPending || atLimit}
           className="gap-1.5 flex-shrink-0"
         >
           <Plus className="h-3.5 w-3.5" /> Add
