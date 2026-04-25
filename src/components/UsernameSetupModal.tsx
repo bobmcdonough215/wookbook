@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 export const UsernameSetupModal = () => {
   const { updateProfile } = useProfile();
   const [username, setUsername] = useState("");
+  const [homeCity, setHomeCity] = useState("");
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Live validation — only runs on non-empty input so the field
@@ -48,7 +49,10 @@ export const UsernameSetupModal = () => {
     }
 
     try {
-      await updateProfile.mutateAsync({ username: result.data });
+      await updateProfile.mutateAsync({
+        username: result.data,
+        ...(homeCity.trim() && { home_city: homeCity.trim() }),
+      });
       // On success: profile invalidated → needsUsernameSetup = false → normal app renders.
     } catch (err) {
       setSubmitError(
@@ -94,6 +98,22 @@ export const UsernameSetupModal = () => {
                 {liveValidationError}
               </p>
             )}
+          </div>
+
+          <div className="space-y-1">
+            <Label htmlFor="home-city" className="stamp">Where do you see shows the most?</Label>
+            <p className="font-mono text-[10px] text-muted-foreground">
+              Discover shows from your favorite artists — enter a zipcode or city.
+            </p>
+            <Input
+              id="home-city"
+              value={homeCity}
+              onChange={(e) => setHomeCity(e.target.value)}
+              placeholder="e.g. Philadelphia, PA or 19103"
+              autoComplete="off"
+              disabled={updateProfile.isPending}
+              className="border-2 border-ink font-mono"
+            />
           </div>
 
           {submitError && (

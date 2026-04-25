@@ -42,6 +42,7 @@ export function useProfile() {
       display_name?: string;
       bio?: string;
       is_public?: boolean;
+      home_city?: string;
     }) => {
       if (!user) throw new Error("Not authenticated");
 

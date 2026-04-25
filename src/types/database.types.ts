@@ -203,6 +203,7 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
+          home_city: string | null
           id: string
           is_public: boolean
           username: string
@@ -212,6 +213,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          home_city?: string | null
           id: string
           is_public?: boolean
           username: string
@@ -221,6 +223,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          home_city?: string | null
           id?: string
           is_public?: boolean
           username?: string
