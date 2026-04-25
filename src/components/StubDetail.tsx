@@ -78,7 +78,7 @@ export const StubDetail = ({
           </div>
           <div>
             <dt className="stamp">Location</dt>
-            <dd>{draft.city}, {draft.state}</dd>
+            <dd>{[draft.city, draft.state].filter(Boolean).join(", ")}</dd>
           </div>
           {draft.special_notes && (
             <div>
