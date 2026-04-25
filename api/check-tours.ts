@@ -360,6 +360,7 @@ function primaryPerformerName(ev: JambaseEvent): string {
 }
 
 const STALE_THRESHOLD = 15;
+const MAX_PAGES_PER_HUB = 15; // hard cap — prevents runaway pagination on first run
 
 /**
  * Paginated JamBase geo query. Returns raw event objects.
@@ -422,7 +423,7 @@ async function fetchJambaseGeo(
 
     totalPages = data.pagination?.totalPages ?? 1;
     page++;
-  } while (page <= totalPages);
+  } while (page <= totalPages && page <= MAX_PAGES_PER_HUB);
 
   return all;
 }
