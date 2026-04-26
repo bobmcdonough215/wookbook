@@ -93,9 +93,10 @@ type UserRecord = {
 // ---------------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------------
-export default async function handler(req: Request) {
-  if (req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new Response("Unauthorized", { status: 401 });
+export default async function handler(req: any, res: any) {
+  if (req.headers["authorization"] !== `Bearer ${process.env.CRON_SECRET}`) {
+    res.status(401).end("Unauthorized");
+    return;
   }
 
   const supabase = createClient(
@@ -114,7 +115,8 @@ export default async function handler(req: Request) {
     .not("home_lng", "is", null);
 
   if (!profiles?.length) {
-    return Response.json({ message: "No users with home coordinates set.", newEvents: 0, matches: 0 });
+    res.json({ message: "No users with home coordinates set.", newEvents: 0, matches: 0 });
+    return;
   }
 
   // -------------------------------------------------------------------------
@@ -147,7 +149,8 @@ export default async function handler(req: Request) {
     }));
 
   if (!users.length) {
-    return Response.json({ message: "No users with watched artists.", newEvents: 0, matches: 0 });
+    res.json({ message: "No users with watched artists.", newEvents: 0, matches: 0 });
+    return;
   }
 
   // -------------------------------------------------------------------------
@@ -304,7 +307,7 @@ export default async function handler(req: Request) {
     }
   }
 
-  return Response.json({
+  res.json({
     hubs:      HUBS.length,
     users:     users.length,
     newEvents: totalNewEvents,

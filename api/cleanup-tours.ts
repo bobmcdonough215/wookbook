@@ -10,9 +10,10 @@ import { createClient } from "@supabase/supabase-js";
 
 export const config = { maxDuration: 60 };
 
-export default async function handler(req: Request) {
-  if (req.headers.get("authorization") !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new Response("Unauthorized", { status: 401 });
+export default async function handler(req: any, res: any) {
+  if (req.headers["authorization"] !== `Bearer ${process.env.CRON_SECRET}`) {
+    res.status(401).end("Unauthorized");
+    return;
   }
 
   const supabase = createClient(
@@ -32,8 +33,9 @@ export default async function handler(req: Request) {
     .lt("date", cutoff);
 
   if (error) {
-    return Response.json({ error: error.message }, { status: 500 });
+    res.status(500).json({ error: error.message });
+    return;
   }
 
-  return Response.json({ deleted: count ?? 0, cutoff });
+  res.json({ deleted: count ?? 0, cutoff });
 }
