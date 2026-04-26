@@ -16,7 +16,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-export const config = { runtime: "edge" };
+export const config = { maxDuration: 300 };
 
 // ---------------------------------------------------------------------------
 // Fixed regional hubs — covers the continental US at 350mi radius.
