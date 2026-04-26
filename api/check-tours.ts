@@ -7,11 +7,13 @@
 //
 // Flow:
 //   1. Load all users with home_lat/lng set + their watched artists
-//   2. Run one geo query per hub (deduplicated globally)
-//   3. For each event returned, insert into tour_events if new
-//   4. Match event performers against every user's watched list
-//   5. Upsert user_event_matches — drive_hours computed per user
-//   6. Notify each user via their own ntfy_topic
+//   2. Pre-load existing tour_events and user_event_matches from DB
+//   3. Run ALL hub geo queries in PARALLEL (Promise.allSettled)
+//   4. Deduplicate events globally across all hubs in memory
+//   5. Single bulk UPSERT into tour_events for all new events
+//   6. Match events against every user's watched list in memory
+//   7. Single bulk UPSERT into user_event_matches for all new matches
+//   8. Send Ntfy notifications sequentially (intentional 200ms rate-limit)
 
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -39,7 +41,7 @@ const HUBS = [
 const GEO_RADIUS_MI = 350;
 
 // ---------------------------------------------------------------------------
-// Zod schemas — unchanged from original, kept here for self-containment
+// Zod schemas
 // ---------------------------------------------------------------------------
 const AddressSchema = z.object({
   addressLocality: z.string().optional(),
@@ -86,8 +88,7 @@ type UserRecord = {
   home_lat:   number;
   home_lng:   number;
   ntfy_topic: string | null;
-  // lowercase artist name → original casing
-  watchedMap: Map<string, string>;
+  watchedMap: Map<string, string>; // lowercase artist name → original casing
 };
 
 // ---------------------------------------------------------------------------
@@ -120,7 +121,7 @@ export default async function handler(req: any, res: any) {
   }
 
   // -------------------------------------------------------------------------
-  // 2. Load watched artists for all users in one query, then group by user
+  // 2. Load watched artists for all users in one query, group by user
   // -------------------------------------------------------------------------
   const { data: allWatched } = await supabase
     .from("watched_artists")
@@ -128,7 +129,6 @@ export default async function handler(req: any, res: any) {
     .eq("muted", false)
     .in("user_id", profiles.map((p) => p.id));
 
-  // Build per-user watched maps
   const watchedByUser = new Map<string, Map<string, string>>();
   for (const row of allWatched ?? []) {
     if (!watchedByUser.has(row.user_id)) {
@@ -137,7 +137,7 @@ export default async function handler(req: any, res: any) {
     watchedByUser.get(row.user_id)!.set(row.artist_name.toLowerCase(), row.artist_name);
   }
 
-  // Assemble full user records — skip users with no watched artists
+  // Skip users with no watched artists
   const users: UserRecord[] = profiles
     .filter((p) => watchedByUser.has(p.id))
     .map((p) => ({
@@ -154,14 +154,12 @@ export default async function handler(req: any, res: any) {
   }
 
   // -------------------------------------------------------------------------
-  // 3. Sweep all hubs — deduplicate events globally across hubs
+  // 3. Pre-load existing DB state to avoid redundant round-trips later
   // -------------------------------------------------------------------------
-  // external_id → tour_events DB id (populated as we insert)
-  const eventIdByExternalId = new Map<string, string>();
-
-  // Pre-load existing external_ids to avoid redundant DB round-trips
-  // (only load future events — past ones don't matter)
   const today = new Date().toISOString().slice(0, 10);
+
+  // external_id → tour_events.id for all future events already in DB
+  const eventIdByExternalId = new Map<string, string>();
   const { data: existingEvents } = await supabase
     .from("tour_events")
     .select("id, external_id")
@@ -171,9 +169,7 @@ export default async function handler(req: any, res: any) {
     eventIdByExternalId.set(e.external_id, e.id);
   }
 
-  // Pre-load all existing user_event_matches for future events into a Set.
-  // Key format: "userId:tourEventId" — checked locally inside the hub loop,
-  // avoiding up to 50,000 DB round-trips (10 hubs × 500 events × 10 users).
+  // "userId:tourEventId" set — checked in memory instead of per-match DB lookups
   const existingMatchKeys = new Set<string>();
   const { data: existingMatches } = await supabase
     .from("user_event_matches")
@@ -185,134 +181,236 @@ export default async function handler(req: any, res: any) {
   }
 
   const knownExternalIds = new Set(eventIdByExternalId.keys());
-
-  let totalNewEvents = 0;
-  let totalNewMatches = 0;
   const errors: string[] = [];
 
-  for (const hub of HUBS) {
-    let rawEvents: unknown[];
-    try {
-      rawEvents = await fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI, knownExternalIds);
-    } catch (e) {
-      errors.push(`hub:${hub.name}: ${e instanceof Error ? e.message : String(e)}`);
-      continue;
-    }
+  // -------------------------------------------------------------------------
+  // PHASE 1 — Fire all hub fetches in PARALLEL
+  //
+  // Previously: sequential for...of — up to 45s of serial HTTP on first run.
+  // Now: all 10 hubs run concurrently. Wall-clock time = slowest single hub.
+  // Promise.allSettled so one failed hub never aborts the others.
+  // -------------------------------------------------------------------------
+  const hubResults = await Promise.allSettled(
+    HUBS.map((hub) =>
+      fetchJambaseGeo(hub.lat, hub.lng, GEO_RADIUS_MI, knownExternalIds)
+        .then((events) => ({ hub: hub.name, events }))
+    )
+  );
 
-    for (const rawEvent of rawEvents) {
+  for (const result of hubResults) {
+    if (result.status === "rejected") {
+      const err = result.reason;
+      errors.push(`hub fetch failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // PHASE 2 — Deduplicate events globally across all hubs (in memory)
+  //
+  // Philly and NYC hubs both cover overlapping territory. First-seen wins.
+  // -------------------------------------------------------------------------
+  const parsedByExternalId = new Map<string, JambaseEvent>();
+
+  for (const result of hubResults) {
+    if (result.status !== "fulfilled") continue;
+    for (const rawEvent of result.value.events) {
       const parsed = JambaseEventSchema.safeParse(rawEvent);
       if (!parsed.success) continue;
-
       const ev = parsed.data;
       if (ev.eventStatus === "cancelled") continue;
-
-      const date = ev.startDate.slice(0, 10);
-      if (date < today) continue;
-
-      // -----------------------------------------------------------------------
-      // 3a. Insert into tour_events if not already seen (globally deduplicated)
-      // -----------------------------------------------------------------------
-      let tourEventId = eventIdByExternalId.get(ev.identifier);
-
-      if (!tourEventId) {
-        const lat = ev.location?.geo?.latitude ?? null;
-        const lng = ev.location?.geo?.longitude ?? null;
-        const primaryOffer = (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary");
-        const ticketUrl = primaryOffer?.url ?? ev.url ?? null;
-
-        const { data: inserted, error: insertError } = await supabase
-          .from("tour_events")
-          .insert({
-            external_id:    ev.identifier,
-            source:         "jambase",
-            artist_name:    primaryPerformerName(ev),
-            date,
-            venue_name:     ev.location?.name ?? null,
-            venue_city:     ev.location?.address?.addressLocality ?? null,
-            venue_state:    ev.location?.address?.addressRegion?.alternateName ?? null,
-            venue_lat:      lat,
-            venue_lng:      lng,
-            ticket_url:     ticketUrl,
-            is_festival:    ev.type === "Festival",
-            is_home_market: false,
-            drive_hours:    null,
-          })
-          .select("id")
-          .single();
-
-        if (insertError) {
-          errors.push(`insert:${ev.identifier}: ${insertError.message}`);
-          continue;
-        }
-        if (!inserted) continue;
-
-        tourEventId = inserted.id as string;
-        eventIdByExternalId.set(ev.identifier, tourEventId);
-        totalNewEvents++;
-      }
-
-      // -----------------------------------------------------------------------
-      // 3b. Match this event against every user's watched list
-      // -----------------------------------------------------------------------
-      for (const user of users) {
-        const matchedArtist = matchWatchedArtist(ev, user.watchedMap);
-        if (!matchedArtist) continue;
-
-        const matchKey = `${user.id}:${tourEventId}`;
-        if (existingMatchKeys.has(matchKey)) continue;
-
-        const venueLat = ev.location?.geo?.latitude ?? null;
-        const venueLng = ev.location?.geo?.longitude ?? null;
-        const driveHours = await getDriveHours(user.home_lat, user.home_lng, venueLat, venueLng);
-        const isHome = isHomeMarket(user.home_lat, user.home_lng, venueLat, venueLng);
-
-        const { error: matchError } = await supabase
-          .from("user_event_matches")
-          .upsert({
-            user_id:        user.id,
-            tour_event_id:  tourEventId,
-            drive_hours:    driveHours,
-            is_home_market: isHome,
-            notified_at:    null,
-          }, { onConflict: "user_id,tour_event_id" });
-
-        if (matchError) {
-          errors.push(`match:${user.id}:${tourEventId}: ${matchError.message}`);
-          continue;
-        }
-
-        existingMatchKeys.add(matchKey);
-        totalNewMatches++;
-
-        // -------------------------------------------------------------------
-        // 3c. Send immediate notification for close/home shows
-        // -------------------------------------------------------------------
-        if (user.ntfy_topic && (isHome || (driveHours != null && driveHours <= 4))) {
-          await sendNotification(user.ntfy_topic, {
-            title: `${matchedArtist} — ${isHome ? "Home market!" : `${driveHours}h away`}`,
-            body:  `${fmtDate(date)} · ${[ev.location?.name, ev.location?.address?.addressLocality].filter(Boolean).join(", ")}`,
-            url:   (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary")?.url ?? ev.url ?? "",
-            priority: "high",
-          });
-
-          await supabase
-            .from("user_event_matches")
-            .update({ notified_at: new Date().toISOString() })
-            .eq("user_id", user.id)
-            .eq("tour_event_id", tourEventId);
-
-          await sleep(200);
-        }
+      if (ev.startDate.slice(0, 10) < today) continue;
+      if (!parsedByExternalId.has(ev.identifier)) {
+        parsedByExternalId.set(ev.identifier, ev);
       }
     }
   }
 
+  // -------------------------------------------------------------------------
+  // PHASE 3 — Single bulk UPSERT for all new tour_events
+  //
+  // Previously: one await supabase.insert() per event inside the loop.
+  // ~1,000 events × ~80ms = up to 80s of serial DB writes.
+  // Now: one upsert call for everything. ~500ms regardless of count.
+  //
+  // onConflict: "external_id" makes this idempotent — safe to re-run anytime.
+  // fetched_at is omitted — Postgres default now() handles it automatically.
+  // -------------------------------------------------------------------------
+  const newEventsList = [...parsedByExternalId.values()].filter(
+    (ev) => !eventIdByExternalId.has(ev.identifier)
+  );
+
+  if (newEventsList.length > 0) {
+    const { data: inserted, error: insertError } = await supabase
+      .from("tour_events")
+      .upsert(
+        newEventsList.map((ev) => ({
+          external_id: ev.identifier,
+          source:      "jambase",
+          artist_name: primaryPerformerName(ev),
+          date:        ev.startDate.slice(0, 10),
+          venue_name:  ev.location?.name ?? null,
+          venue_city:  ev.location?.address?.addressLocality ?? null,
+          venue_state: ev.location?.address?.addressRegion?.alternateName ?? null,
+          venue_lat:   ev.location?.geo?.latitude ?? null,
+          venue_lng:   ev.location?.geo?.longitude ?? null,
+          ticket_url:  (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary")?.url
+                         ?? ev.url
+                         ?? null,
+          is_festival: ev.type === "Festival",
+        })),
+        { onConflict: "external_id" }
+      )
+      .select("id, external_id");
+
+    if (insertError) {
+      errors.push(`bulk_insert_tour_events: ${insertError.message}`);
+    }
+
+    // Populate map so the match phase can resolve DB ids for newly inserted rows
+    for (const row of inserted ?? []) {
+      eventIdByExternalId.set(row.external_id, row.id);
+    }
+  }
+
+  const totalNewEvents = newEventsList.length;
+
+  // -------------------------------------------------------------------------
+  // PHASE 4 — Collect all user→event matches in memory
+  //
+  // Previously: one await supabase.upsert() per match inside nested loops.
+  // ~500 matches × ~80ms = up to 40s of serial DB writes.
+  // Now: collect all matches first, fire one bulk upsert after.
+  //
+  // Notification candidates are also collected here for Phase 5.
+  // -------------------------------------------------------------------------
+  type MatchRow = {
+    user_id:        string;
+    tour_event_id:  string;
+    drive_hours:    number | null;
+    is_home_market: boolean;
+    notified_at:    null;
+  };
+
+  type NotifyCandidate = {
+    ntfy_topic:  string;
+    artistName:  string;
+    isHome:      boolean;
+    driveHours:  number | null;
+    date:        string;
+    venueName:   string | null;
+    venueCity:   string | null;
+    ticketUrl:   string;
+    tourEventId: string;
+    userId:      string;
+  };
+
+  const matchesToUpsert: MatchRow[]         = [];
+  const notifyCandidates: NotifyCandidate[] = [];
+
+  for (const [extId, ev] of parsedByExternalId) {
+    const tourEventId = eventIdByExternalId.get(extId);
+    if (!tourEventId) continue; // insert failed for this event — skip silently
+
+    const venueLat  = ev.location?.geo?.latitude ?? null;
+    const venueLng  = ev.location?.geo?.longitude ?? null;
+    const date      = ev.startDate.slice(0, 10);
+    const ticketUrl = (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary")?.url
+                        ?? ev.url
+                        ?? "";
+
+    for (const user of users) {
+      const matchedArtist = matchWatchedArtist(ev, user.watchedMap);
+      if (!matchedArtist) continue;
+
+      const matchKey = `${user.id}:${tourEventId}`;
+      if (existingMatchKeys.has(matchKey)) continue; // already in DB
+
+      const driveHours = await getDriveHours(user.home_lat, user.home_lng, venueLat, venueLng);
+      const isHome     = isHomeMarket(user.home_lat, user.home_lng, venueLat, venueLng);
+
+      matchesToUpsert.push({
+        user_id:        user.id,
+        tour_event_id:  tourEventId,
+        drive_hours:    driveHours,
+        is_home_market: isHome,
+        notified_at:    null,
+      });
+
+      existingMatchKeys.add(matchKey); // prevent duplicates within this run
+
+      // Queue notification candidates — sent after bulk upsert commits
+      if (user.ntfy_topic && (isHome || (driveHours != null && driveHours <= 4))) {
+        notifyCandidates.push({
+          ntfy_topic:  user.ntfy_topic,
+          artistName:  matchedArtist,
+          isHome,
+          driveHours,
+          date,
+          venueName:   ev.location?.name ?? null,
+          venueCity:   ev.location?.address?.addressLocality ?? null,
+          ticketUrl,
+          tourEventId,
+          userId:      user.id,
+        });
+      }
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // PHASE 4b — Single bulk UPSERT for user_event_matches
+  //
+  // ignoreDuplicates: true so that if a match row already exists (shouldn't
+  // happen given the existingMatchKeys check above, but belt-and-suspenders),
+  // we never overwrite a real notified_at timestamp with null.
+  // -------------------------------------------------------------------------
+  if (matchesToUpsert.length > 0) {
+    const { error: matchError } = await supabase
+      .from("user_event_matches")
+      .upsert(matchesToUpsert, {
+        onConflict:       "user_id,tour_event_id",
+        ignoreDuplicates: true,
+      });
+
+    if (matchError) {
+      errors.push(`bulk_upsert_matches: ${matchError.message}`);
+    }
+  }
+
+  const totalNewMatches = matchesToUpsert.length;
+
+  // -------------------------------------------------------------------------
+  // PHASE 5 — Notifications (sequential, intentional 200ms rate-limit for Ntfy)
+  //
+  // Runs after all DB writes are committed — if the function times out here,
+  // data is already safe. notified_at is written per-notification so partial
+  // progress is preserved across retries.
+  // -------------------------------------------------------------------------
+  for (const candidate of notifyCandidates) {
+    const locationParts = [candidate.venueName, candidate.venueCity].filter(Boolean);
+
+    await sendNotification(candidate.ntfy_topic, {
+      title:    `${candidate.artistName} — ${candidate.isHome ? "Home market!" : `${candidate.driveHours}h away`}`,
+      body:     `${fmtDate(candidate.date)}${locationParts.length ? " · " + locationParts.join(", ") : ""}`,
+      url:      candidate.ticketUrl,
+      priority: "high",
+    });
+
+    await supabase
+      .from("user_event_matches")
+      .update({ notified_at: new Date().toISOString() })
+      .eq("user_id", candidate.userId)
+      .eq("tour_event_id", candidate.tourEventId);
+
+    await sleep(200);
+  }
+
   res.json({
-    hubs:      HUBS.length,
-    users:     users.length,
-    newEvents: totalNewEvents,
-    matches:   totalNewMatches,
-    errors:    errors.length ? errors : undefined,
+    hubs:          HUBS.length,
+    users:         users.length,
+    newEvents:     totalNewEvents,
+    matches:       totalNewMatches,
+    notifications: notifyCandidates.length,
+    errors:        errors.length ? errors : undefined,
   });
 }
 
@@ -322,7 +420,7 @@ export default async function handler(req: any, res: any) {
 
 /**
  * Returns true if the venue is within HOME_MARKET_RADIUS_MI of the user's home.
- * Uses the equirectangular approximation — accurate enough at the distances involved.
+ * Uses the equirectangular approximation — accurate enough at these distances.
  * Falls back to false if venue coordinates are unavailable.
  */
 function isHomeMarket(
@@ -348,7 +446,7 @@ function matchWatchedArtist(
 ): string | null {
   const performers = ev.performer ?? [];
   const headliners = performers.filter((p) => p["x-isHeadliner"]);
-  const ordered = headliners.length
+  const ordered    = headliners.length
     ? [...headliners, ...performers.filter((p) => !p["x-isHeadliner"])]
     : performers;
 
@@ -361,23 +459,24 @@ function matchWatchedArtist(
 }
 
 /**
- * Returns the headliner name (or first performer) for use as the canonical
- * artist_name stored in tour_events. This is the global label for the event —
- * per-user matched artist name comes from matchWatchedArtist at match time.
+ * Returns the headliner name (or first performer) for the canonical
+ * artist_name stored on tour_events. Per-user matched artist name
+ * comes from matchWatchedArtist at match time.
  */
 function primaryPerformerName(ev: JambaseEvent): string {
   const performers = ev.performer ?? [];
-  const headliner = performers.find((p) => p["x-isHeadliner"]);
+  const headliner  = performers.find((p) => p["x-isHeadliner"]);
   return headliner?.name ?? performers[0]?.name ?? "Unknown Artist";
 }
 
-const STALE_THRESHOLD = 15;
-const MAX_PAGES_PER_HUB = 15; // hard cap — prevents runaway pagination on first run
+const STALE_THRESHOLD   = 15;
+const MAX_PAGES_PER_HUB = 15;
 
 /**
- * Paginated JamBase geo query. Returns raw event objects.
+ * Paginated JamBase geo query for one hub. Returns raw event objects.
  * Bails early when STALE_THRESHOLD consecutive known events are seen —
- * avoids fetching deep pages that are almost entirely already in our DB.
+ * avoids fetching deep pages that are almost entirely already in the DB.
+ * In steady state (day 2+) this typically exits after page 1.
  */
 async function fetchJambaseGeo(
   lat: number,
@@ -389,7 +488,7 @@ async function fetchJambaseGeo(
 
   const today = new Date().toISOString().slice(0, 10);
   const all: unknown[] = [];
-  let page = 1;
+  let page       = 1;
   let totalPages = 1;
 
   do {
@@ -415,7 +514,7 @@ async function fetchJambaseGeo(
     const events: unknown[] = Array.isArray(data.events) ? data.events : [];
 
     let consecutiveKnown = 0;
-    let bailed = false;
+    let bailed           = false;
 
     for (const ev of events) {
       const id = (ev as any)?.identifier;
@@ -442,25 +541,26 @@ async function fetchJambaseGeo(
 
 /**
  * Drive time estimate via OpenRouteService.
- * Returns hours (1 decimal) or null if ORS unavailable / call fails.
+ * Returns hours (1 decimal) or null if ORS_KEY not set or call fails.
+ * AbortController enforces a 5s timeout — ORS is the flakiest dependency.
  */
 async function getDriveHours(
   fromLat: number,
   fromLng: number,
-  toLat: number | null,
-  toLng: number | null
+  toLat:   number | null,
+  toLng:   number | null
 ): Promise<number | null> {
   if (!toLat || !toLng || !process.env.ORS_KEY) return null;
   try {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout    = setTimeout(() => controller.abort(), 5000);
     const res = await fetch(
       `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${process.env.ORS_KEY}&start=${fromLng},${fromLat}&end=${toLng},${toLat}`,
       { signal: controller.signal }
     );
     clearTimeout(timeout);
     if (!res.ok) return null;
-    const data = await res.json();
+    const data    = await res.json();
     const seconds = data.features?.[0]?.properties?.segments?.[0]?.duration;
     return seconds ? Math.round((seconds / 3600) * 10) / 10 : null;
   } catch {
