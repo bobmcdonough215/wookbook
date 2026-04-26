@@ -11,7 +11,7 @@
 //   Modal shows confirmation message and switches to sign-in mode.
 //   User confirms email, then signs in normally.
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import {
   Dialog,
@@ -38,6 +38,12 @@ export const AuthModal = ({ open, onOpenChange, initialMode = "sign_in" }: Props
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+
+  // Sync mode to initialMode each time the modal opens — useState(initialMode) only
+  // runs on first mount, so prop changes after mount are ignored without this.
+  useEffect(() => {
+    if (open) setMode(initialMode);
+  }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const clearMessages = () => {
     setError(null);
