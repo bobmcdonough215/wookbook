@@ -163,7 +163,8 @@ export default async function handler(req: any, res: any) {
   const { data: existingEvents } = await supabase
     .from("tour_events")
     .select("id, external_id")
-    .gte("date", today);
+    .gte("date", today)
+    .limit(100000);
 
   for (const e of existingEvents ?? []) {
     eventIdByExternalId.set(e.external_id, e.id);
