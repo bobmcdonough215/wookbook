@@ -5,6 +5,7 @@
 
 type Props = {
   onSignIn: () => void;
+  onSignUp: () => void;
 };
 
 const FEATURES = [
@@ -32,7 +33,7 @@ const FEATURES = [
   },
 ];
 
-export const LandingView = ({ onSignIn }: Props) => (
+export const LandingView = ({ onSignIn, onSignUp }: Props) => (
   <div className="grain min-h-screen w-full bg-background">
     {/* ── Minimal header ── */}
     <header className="border-b-2 border-ink">
@@ -69,15 +70,12 @@ export const LandingView = ({ onSignIn }: Props) => (
           Sign in to your archive
         </button>
         <button
-          onClick={onSignIn}
+          onClick={onSignUp}
           className="inline-flex items-center gap-2 border-2 border-ink bg-background px-7 py-3.5 font-mono text-xs uppercase tracking-widest shadow-[4px_4px_0_hsl(var(--ink))] transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_hsl(var(--ink))]"
         >
           Create an account
         </button>
       </div>
-      <p className="mt-4 font-mono text-[10px] text-muted-foreground">
-        New to WookBook? Create an account from the sign-in screen.
-      </p>
     </section>
 
     {/* ── Divider ── */}
@@ -150,7 +148,7 @@ Billy Strings,2022-08-05,Red Rocks,Morrison,CO`}
         Your shows deserve a ledger.
       </h2>
       <button
-        onClick={onSignIn}
+        onClick={onSignUp}
         className="mt-8 inline-flex items-center gap-2 border-2 border-ink bg-primary px-8 py-4 font-mono text-xs uppercase tracking-widest text-primary-foreground shadow-[5px_5px_0_hsl(var(--ink))] transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[6px_6px_0_hsl(var(--ink))]"
       >
         Get early access

@@ -23,6 +23,7 @@ type Props = {
   isPlaying: boolean;
   onPlayTrack: (track: Track, concert?: Concert) => void;
   onToggleTrack: (track: Track, concert?: Concert) => void;
+  onGoToImport: () => void;
 };
 
 export const ArchiveView = ({
@@ -38,6 +39,7 @@ export const ArchiveView = ({
   isPlaying,
   onPlayTrack,
   onToggleTrack,
+  onGoToImport,
 }: Props) => {
   const [q, setQ] = useState("");
   const [year, setYear] = useState<string>("all");
@@ -190,7 +192,30 @@ export const ArchiveView = ({
         </div>
       )}
 
-      {filtered.length === 0 && (
+      {concerts.length === 0 && (
+        <div className="rounded-sm border-2 border-dashed border-ink p-10 text-center">
+          <div className="stamp mb-3 text-muted-foreground">No shows on file</div>
+          <div className="font-display text-3xl leading-none">Start your ledger.</div>
+          <p className="mt-3 max-w-sm mx-auto text-sm text-muted-foreground">
+            Got a spreadsheet or notes app tracking your shows? Import a CSV and your whole history loads at once.
+          </p>
+          <pre className="mt-4 inline-block text-left font-mono text-xs leading-relaxed text-muted-foreground border border-dashed border-ink px-4 py-3">
+{`artist,date,venue,city,state
+Phish,1999-12-31,MSG,New York,NY
+Goose,2023-07-04,SPAC,Saratoga,NY`}
+          </pre>
+          <div className="mt-6">
+            <button
+              onClick={onGoToImport}
+              className="inline-flex items-center gap-2 border-2 border-ink bg-primary px-6 py-3 font-mono text-xs uppercase tracking-widest text-primary-foreground shadow-[4px_4px_0_hsl(var(--ink))] transition-all hover:-translate-x-px hover:-translate-y-px hover:shadow-[5px_5px_0_hsl(var(--ink))]"
+            >
+              Import CSV
+            </button>
+          </div>
+        </div>
+      )}
+
+      {concerts.length > 0 && filtered.length === 0 && (
         <div className="rounded-sm border-2 border-dashed border-ink p-10 text-center">
           <div className="font-display text-xl">Nothing on file.</div>
           <div className="mt-1 text-sm text-muted-foreground">Try a different search or year.</div>

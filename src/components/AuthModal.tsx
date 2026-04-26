@@ -28,10 +28,11 @@ type Mode = "sign_in" | "sign_up";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialMode?: Mode;
 };
 
-export const AuthModal = ({ open, onOpenChange }: Props) => {
-  const [mode, setMode] = useState<Mode>("sign_in");
+export const AuthModal = ({ open, onOpenChange, initialMode = "sign_in" }: Props) => {
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -53,7 +54,7 @@ export const AuthModal = ({ open, onOpenChange }: Props) => {
       setEmail("");
       setPassword("");
       clearMessages();
-      setMode("sign_in");
+      setMode(initialMode);
     }
     onOpenChange(open);
   };

@@ -38,6 +38,7 @@ const Index = () => {
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<"sign_in" | "sign_up">("sign_in");
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   // ── One-time localStorage migration ───────────────────────────────────────────
@@ -144,8 +145,11 @@ const Index = () => {
   if (!authLoading && !user) {
     return (
       <>
-        <LandingView onSignIn={() => setShowAuthModal(true)} />
-        <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+        <LandingView
+          onSignIn={() => { setAuthModalMode("sign_in"); setShowAuthModal(true); }}
+          onSignUp={() => { setAuthModalMode("sign_up"); setShowAuthModal(true); }}
+        />
+        <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} initialMode={authModalMode} />
       </>
     );
   }
@@ -277,6 +281,7 @@ const Index = () => {
                   isPlaying={isPlaying}
                   onPlayTrack={handlePlay}
                   onToggleTrack={handleToggle}
+                  onGoToImport={() => setView("import")}
                 />
               )}
               {view === "stats"    && <Stats concerts={concerts} />}
@@ -313,7 +318,7 @@ const Index = () => {
         />
       )}
 
-      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} />
+      <AuthModal open={showAuthModal} onOpenChange={setShowAuthModal} initialMode={authModalMode} />
       <ProfileSettingsModal open={showSettingsModal} onOpenChange={setShowSettingsModal} />
     </SidebarProvider>
   );

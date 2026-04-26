@@ -40,6 +40,18 @@ export async function migrateLegacyLocalStorage(userId: string): Promise<void> {
   // Guard: do not re-run if already completed for this user
   if (localStorage.getItem(migrationFlagKey(userId))) return;
 
+  // Guard: new users have no legacy data — skip entirely and mark done so this
+  // never runs again for them. Without this, step 2 below would insert all 342
+  // seed shows as attended for every new signup.
+  const hasLegacyData =
+    localStorage.getItem(LEGACY_KEYS.extras) ||
+    localStorage.getItem(LEGACY_KEYS.upcoming) ||
+    localStorage.getItem(LEGACY_KEYS.wishlist);
+  if (!hasLegacyData) {
+    localStorage.setItem(migrationFlagKey(userId), new Date().toISOString());
+    return;
+  }
+
   const errors: string[] = [];
 
   // ── 1. Archive extras → attendances ──────────────────────────────────────────
