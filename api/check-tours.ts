@@ -470,7 +470,7 @@ function primaryPerformerName(ev: JambaseEvent): string {
 }
 
 const STALE_THRESHOLD   = 15;
-const MAX_PAGES_PER_HUB = 15;
+const MAX_PAGES_PER_HUB = 5;
 
 /**
  * Paginated JamBase geo query for one hub. Returns raw event objects.
@@ -550,7 +550,7 @@ async function getDriveHours(
   toLat:   number | null,
   toLng:   number | null
 ): Promise<number | null> {
-  if (!toLat || !toLng || !process.env.ORS_KEY) return null;
+  if (toLat == null || toLng == null || !process.env.ORS_KEY) return null;
   try {
     const controller = new AbortController();
     const timeout    = setTimeout(() => controller.abort(), 5000);
