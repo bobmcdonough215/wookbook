@@ -188,7 +188,7 @@ export function useRecordings(concerts: Concert[]) {
     prefetch();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [concerts.length > 0]);
+  }, [concerts.length]);
 
   return { cache, hasRecording, fetchRecording };
 }
