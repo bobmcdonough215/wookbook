@@ -66,9 +66,10 @@ const JambaseEventSchema = z.object({
     "x-isHeadliner": z.boolean().optional(),
   })).optional(),
   location: z.object({
-    name:    z.string().optional(),
-    address: AddressSchema,
-    geo:     GeoSchema,
+    identifier: z.string().optional(),
+    name:       z.string().optional(),
+    address:    AddressSchema,
+    geo:        GeoSchema,
   }).optional(),
   offers: z.array(z.object({
     url:      z.string().optional(),
@@ -257,7 +258,8 @@ export default async function handler(req: any, res: any) {
           ticket_url:  (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary")?.url
                          ?? ev.url
                          ?? null,
-          is_festival: ev.type === "Festival",
+          is_festival:        ev.type === "Festival",
+          venue_external_id:  ev.location?.identifier ?? null,
         })),
         { onConflict: "external_id" }
       )
