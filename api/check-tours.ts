@@ -331,6 +331,7 @@ export default async function handler(req: any, res: any) {
       if (existingMatchKeys.has(matchKey)) continue; // already in DB
 
       const driveHours = await getDriveHours(user.home_lat, user.home_lng, venueLat, venueLng);
+      if (driveHours !== null) await sleep(1500); // stay under ORS 40 req/min free tier limit
       const isHome     = isHomeMarket(user.home_lat, user.home_lng, venueLat, venueLng);
 
       matchesToUpsert.push({
