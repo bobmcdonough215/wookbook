@@ -128,15 +128,15 @@ export const DiscoverView = ({ concerts }: Props) => {
   const handlePass   = (id: string) => decide.mutate({ tourEventId: id, decision: "pass" });
   const handleIgnore = (id: string) => decide.mutate({ tourEventId: id, decision: "ignore" });
 
-  // Visible = not yet passed or ignored, sorted home → drive hours → date
+  // Visible = not yet passed or ignored, sorted home → date → drive hours
   const visible = (events ?? []).filter(
     (e) => !["pass", "ignore"].includes(decisions?.get(e.id) ?? "")
   );
   const sorted = [...visible].sort((a, b) => {
     if (a.is_home_market !== b.is_home_market) return a.is_home_market ? -1 : 1;
-    if ((a.drive_hours ?? 99) !== (b.drive_hours ?? 99))
-      return (a.drive_hours ?? 99) - (b.drive_hours ?? 99);
-    return a.date.localeCompare(b.date);
+    const dateDiff = a.date.localeCompare(b.date);
+    if (dateDiff !== 0) return dateDiff;
+    return (a.drive_hours ?? 99) - (b.drive_hours ?? 99);
   });
 
   const interestedEvents = (events ?? []).filter((e) => decisions?.get(e.id) === "interested");
