@@ -2,7 +2,7 @@
 // Daily Vercel cron — 9am UTC.
 //
 // Strategy: fixed US regional hubs, not per-user geo queries.
-// 10 hubs × ~5 pages × 30 days = ~1,500 JamBase calls/month.
+// 10 hubs × ~2-3 pages × 30 days = ~700 JamBase calls/month (genre filter fires early bail faster).
 // That number does not grow with user count — only with hub count.
 //
 // Flow:
@@ -62,6 +62,7 @@ const JambaseEventSchema = z.object({
   eventStatus: z.string().optional(),
   type:        z.string().optional(),
   performer: z.array(z.object({
+    identifier:      z.string().optional(),
     name:            z.string().optional(),
     "x-isHeadliner": z.boolean().optional(),
   })).optional(),
@@ -258,8 +259,9 @@ export default async function handler(req: any, res: any) {
           ticket_url:  (ev.offers ?? []).find((o) => o.category === "ticketingLinkPrimary")?.url
                          ?? ev.url
                          ?? null,
-          is_festival:        ev.type === "Festival",
-          venue_external_id:  ev.location?.identifier ?? null,
+          is_festival:          ev.type === "Festival",
+          venue_external_id:    ev.location?.identifier ?? null,
+          artist_external_id:   primaryPerformerIdentifier(ev),
         })),
         { onConflict: "external_id" }
       )
@@ -472,6 +474,12 @@ function primaryPerformerName(ev: JambaseEvent): string {
   return headliner?.name ?? performers[0]?.name ?? "Unknown Artist";
 }
 
+function primaryPerformerIdentifier(ev: JambaseEvent): string | null {
+  const performers = ev.performer ?? [];
+  const headliner  = performers.find((p) => p["x-isHeadliner"]);
+  return headliner?.identifier ?? performers[0]?.identifier ?? null;
+}
+
 const STALE_THRESHOLD   = 15;
 const MAX_PAGES_PER_HUB = 5;
 
@@ -502,6 +510,7 @@ async function fetchJambaseGeo(
     url.searchParams.set("geoRadiusUnits",  "mi");
     url.searchParams.set("eventDateFrom",   today);
     url.searchParams.set("perPage",         "100");
+    url.searchParams.set("genreSlug",       "jamband|bluegrass|folk|reggae|blues|rock|indie");
     if (page > 1) url.searchParams.set("page", String(page));
 
     const res = await fetch(url.toString(), {
