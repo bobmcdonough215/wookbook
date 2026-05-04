@@ -20,9 +20,11 @@ type TourEvent = {
   venue_name:     string | null;
   venue_city:     string | null;
   venue_state:    string | null;
-  drive_hours:    number | null;
+  drive_hours:    number | null;   // ORS-accurate, only for watched matches
+  dist_miles:     number | null;   // straight-line, for non-watched shows
   is_home_market: boolean;
   is_festival:    boolean;
+  is_watched:     boolean;
   ticket_url:     string | null;
 };
 
@@ -128,7 +130,7 @@ export const DiscoverView = ({ concerts }: Props) => {
   const handlePass   = (id: string) => decide.mutate({ tourEventId: id, decision: "pass" });
   const handleIgnore = (id: string) => decide.mutate({ tourEventId: id, decision: "ignore" });
 
-  // Visible = not yet passed or ignored, sorted home → date → drive hours
+  // Visible = not yet passed or ignored, sorted home → date → watched → distance
   const visible = (events ?? []).filter(
     (e) => !["pass", "ignore"].includes(decisions?.get(e.id) ?? "")
   );
@@ -136,7 +138,10 @@ export const DiscoverView = ({ concerts }: Props) => {
     if (a.is_home_market !== b.is_home_market) return a.is_home_market ? -1 : 1;
     const dateDiff = a.date.localeCompare(b.date);
     if (dateDiff !== 0) return dateDiff;
-    return (a.drive_hours ?? 99) - (b.drive_hours ?? 99);
+    if (a.is_watched !== b.is_watched) return a.is_watched ? -1 : 1;
+    const aDist = a.drive_hours ?? (a.dist_miles ? a.dist_miles / 55 : 999);
+    const bDist = b.drive_hours ?? (b.dist_miles ? b.dist_miles / 55 : 999);
+    return aDist - bDist;
   });
 
   const interestedEvents = (events ?? []).filter((e) => decisions?.get(e.id) === "interested");
@@ -178,12 +183,10 @@ export const DiscoverView = ({ concerts }: Props) => {
 
           {!eventsLoading && sorted.length === 0 && (
             <div className="rounded-sm border-2 border-dashed border-ink p-10 text-center">
-              <div className="font-display text-xl">Nothing on the radar yet.</div>
+              <div className="font-display text-xl">Nothing within range.</div>
               <div className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
-                The daily cron picks up new dates each morning.{" "}
-                {watchedArtists.filter((a) => !a.muted).length === 0
-                  ? "Add artists to your watched list to get started."
-                  : `Watching ${watchedArtists.filter((a) => !a.muted).length} artist${watchedArtists.filter((a) => !a.muted).length > 1 ? "s" : ""}.`}
+                No genre-filtered shows found within 150 miles of your home city.
+                The daily cron picks up new dates each morning.
                 {passedCount > 0 && (
                   <span className="block mt-1 text-xs text-muted-foreground">
                     {passedCount} show{passedCount > 1 ? "s" : ""} marked as pass.
@@ -270,11 +273,25 @@ const TourEventCard = ({ event, decision, onInterested, onPass, onIgnore, isPend
     .filter(Boolean)
     .join(", ");
 
+  const stripColor = event.is_home_market
+    ? "bg-accent"
+    : event.is_watched
+    ? "bg-brass"
+    : "bg-muted";
+
+  const distDisplay = event.is_home_market
+    ? null
+    : event.drive_hours != null
+    ? `${event.drive_hours}h drive`
+    : event.dist_miles != null
+    ? `~${event.dist_miles}mi`
+    : null;
+
   return (
     <div className="rounded-sm border-2 border-ink bg-card overflow-hidden">
       <div className="flex items-stretch">
-        {/* Left accent strip */}
-        <div className={`w-2 flex-shrink-0 ${event.is_home_market ? "bg-accent" : "bg-muted"}`} />
+        {/* Left accent strip: oxblood = home, brass = watching, muted = discovery */}
+        <div className={`w-2 flex-shrink-0 ${stripColor}`} />
 
         <div className="flex flex-1 flex-col gap-3 p-4">
           <div className="flex items-start justify-between gap-4">
@@ -292,15 +309,18 @@ const TourEventCard = ({ event, decision, onInterested, onPass, onIgnore, isPend
                   Home
                 </span>
               )}
+              {!event.is_home_market && event.is_watched && (
+                <span className="rounded-sm border border-brass px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-foreground">
+                  Watching
+                </span>
+              )}
               {event.is_festival && (
                 <span className="rounded-sm border border-ink px-2 py-0.5 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
                   Festival
                 </span>
               )}
-              {!event.is_home_market && event.drive_hours != null && (
-                <span className="font-mono text-xs text-muted-foreground">
-                  {event.drive_hours}h drive
-                </span>
+              {distDisplay && (
+                <span className="font-mono text-xs text-muted-foreground">{distDisplay}</span>
               )}
             </div>
           </div>
