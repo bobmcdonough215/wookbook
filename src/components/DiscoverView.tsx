@@ -41,6 +41,8 @@ export const DiscoverView = ({ concerts }: Props) => {
   const { addUpcoming } = useUpcoming();
   const { artists: watchedArtists, loading: watchedLoading, atLimit, slotsRemaining, syncFromArchive, addArtist, toggleMute, removeArtist } = useWatchedArtists();
   const [tab, setTab] = useState<"shows" | "watched">("shows");
+  const [filterType, setFilterType] = useState<"all" | "concerts" | "festivals">("all");
+  const [filterArtists, setFilterArtists] = useState<"all" | "watching" | "new">("all");
 
   // Auto-populate watched artists from archive on first Discover visit
   useEffect(() => {
@@ -130,10 +132,15 @@ export const DiscoverView = ({ concerts }: Props) => {
   const handlePass   = (id: string) => decide.mutate({ tourEventId: id, decision: "pass" });
   const handleIgnore = (id: string) => decide.mutate({ tourEventId: id, decision: "ignore" });
 
-  // Visible = not yet passed or ignored, sorted home → date → watched → distance
-  const visible = (events ?? []).filter(
-    (e) => !["pass", "ignore"].includes(decisions?.get(e.id) ?? "")
-  );
+  // Visible = not yet passed or ignored, then apply UI filters
+  const visible = (events ?? []).filter((e) => {
+    if (["pass", "ignore"].includes(decisions?.get(e.id) ?? "")) return false;
+    if (filterType === "concerts" && e.is_festival) return false;
+    if (filterType === "festivals" && !e.is_festival) return false;
+    if (filterArtists === "watching" && !e.is_watched) return false;
+    if (filterArtists === "new" && e.is_watched) return false;
+    return true;
+  });
   const sorted = [...visible].sort((a, b) => {
     if (a.is_home_market !== b.is_home_market) return a.is_home_market ? -1 : 1;
     const dateDiff = a.date.localeCompare(b.date);
@@ -173,6 +180,46 @@ export const DiscoverView = ({ concerts }: Props) => {
 
       {tab === "shows" && (
         <div className="space-y-4">
+          {/* Filter row */}
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Type</span>
+              <div className="inline-flex border border-ink">
+                {(["all", "concerts", "festivals"] as const).map((v, i) => (
+                  <button
+                    key={v}
+                    onClick={() => setFilterType(v)}
+                    className={`px-3 py-1 font-mono text-xs transition-colors ${
+                      filterType === v
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    } ${i > 0 ? "border-l border-ink" : ""}`}
+                  >
+                    {v === "all" ? "All" : v === "concerts" ? "Concerts" : "Festivals"}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Artists</span>
+              <div className="inline-flex border border-ink">
+                {(["all", "watching", "new"] as const).map((v, i) => (
+                  <button
+                    key={v}
+                    onClick={() => setFilterArtists(v)}
+                    className={`px-3 py-1 font-mono text-xs transition-colors ${
+                      filterArtists === v
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted"
+                    } ${i > 0 ? "border-l border-ink" : ""}`}
+                  >
+                    {v === "all" ? "All" : v === "watching" ? "Watching" : "Discover"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           {eventsLoading && (
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -183,10 +230,23 @@ export const DiscoverView = ({ concerts }: Props) => {
 
           {!eventsLoading && sorted.length === 0 && (
             <div className="rounded-sm border-2 border-dashed border-ink p-10 text-center">
-              <div className="font-display text-xl">Nothing within range.</div>
+              <div className="font-display text-xl">
+                {filterType !== "all" || filterArtists !== "all" ? "No matches for this filter." : "Nothing within range."}
+              </div>
               <div className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
-                No genre-filtered shows found within 150 miles of your home city.
-                The daily cron picks up new dates each morning.
+                {filterType !== "all" || filterArtists !== "all" ? (
+                  <button
+                    onClick={() => { setFilterType("all"); setFilterArtists("all"); }}
+                    className="underline hover:text-foreground transition-colors"
+                  >
+                    Clear filters
+                  </button>
+                ) : (
+                  <>
+                    No genre-filtered shows found within 150 miles of your home city.
+                    The daily cron picks up new dates each morning.
+                  </>
+                )}
                 {passedCount > 0 && (
                   <span className="block mt-1 text-xs text-muted-foreground">
                     {passedCount} show{passedCount > 1 ? "s" : ""} marked as pass.
