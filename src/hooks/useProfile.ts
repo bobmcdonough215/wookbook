@@ -39,7 +39,7 @@ export function useProfile() {
     staleTime: 5 * 60 * 1000,
   });
 
-  const needsUsernameSetup = !!profileQuery.data?.username?.match(/_[a-f0-9]{6}$/);
+  const needsUsernameSetup = !!profileQuery.data?.username?.match(/^user_[a-f0-9]{10}$/);
 
   const updateProfile = useMutation({
     mutationFn: async (updates: {
