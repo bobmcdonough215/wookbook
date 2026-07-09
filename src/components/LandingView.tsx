@@ -10,26 +10,20 @@ type Props = {
 
 const FEATURES = [
   {
-    stamp: "Feature I",
     title: "Your Archive",
     body: "Every show you've ever attended, catalogued by date, artist, venue, and city. Rate it. Add a memory. Search by artist or year.",
   },
   {
-    stamp: "Feature II",
     title: "Live Recordings",
     body: "Instant access to live recordings via Relisten, Phish.in, and Archive.org — right from your show stub. No searching. No tabs.",
   },
   {
-    stamp: "Feature III",
     title: "CSV Import",
     body: "Already tracking shows in a spreadsheet or notes app? Import a CSV and we'll pull your whole history in — artist, date, venue, city. No manual entry row by row.",
-    badge: "Coming Soon",
   },
   {
-    stamp: "Feature IV",
-    title: "Who Else Was There",
-    body: "See how many people logged the same show. Follow other fans. Find out who shares your most obscure setlists.",
-    badge: "Coming Soon",
+    title: "Follow Upcoming Tour Dates",
+    body: "Watch the artists you love. Get notified the moment they announce a show near you. Discover new live music in your area — tour dates surfaced automatically as they're announced.",
   },
 ];
 
@@ -55,11 +49,11 @@ export const LandingView = ({ onSignIn, onSignUp }: Props) => (
       </h1>
       <div className="brass-rule my-8 max-w-sm" />
       <p className="max-w-lg font-display text-3xl leading-snug">
-        A concert archive built by a fan, for fans. Not powered by AI. And I'm not doing anything with your data.
+        A concert archive built by a fan, for fans.
       </p>
       <p className="mt-4 max-w-md text-sm italic text-muted-foreground">
         Log every show you've ever seen. Discover live recordings. Track upcoming dates.
-        Connect with the people who were there. Coming soon to the public.
+        Connect with the people who were there.
       </p>
 
       <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -92,7 +86,7 @@ export const LandingView = ({ onSignIn, onSignUp }: Props) => (
       <div className="grid gap-6 sm:grid-cols-2">
         {FEATURES.map((f) => (
           <div
-            key={f.stamp}
+            key={f.title}
             className="relative border-2 border-ink bg-card p-6 shadow-[4px_4px_0_hsl(var(--ink))]"
           >
             {f.badge && (
@@ -100,7 +94,6 @@ export const LandingView = ({ onSignIn, onSignUp }: Props) => (
                 {f.badge}
               </span>
             )}
-            <div className="stamp mb-2 text-muted-foreground">{f.stamp}</div>
             <h2 className="font-display text-2xl leading-none">{f.title}</h2>
             <div className="ink-rule my-3" />
             <p className="text-sm text-muted-foreground">{f.body}</p>
@@ -114,14 +107,14 @@ export const LandingView = ({ onSignIn, onSignUp }: Props) => (
       <div className="mx-auto max-w-5xl px-6 py-12">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:gap-12">
           <div className="flex-1">
-            <div className="stamp mb-2">CSV Import · Coming Soon</div>
+            <div className="stamp mb-2">CSV Import · Available Now</div>
             <h2 className="font-display text-4xl leading-none">
               Already tracking shows?
             </h2>
             <p className="mt-3 max-w-md text-sm text-muted-foreground">
               Got a Google Sheet, a notes app, a spreadsheet going back years?
               Export it as a CSV — artist, date, venue, city — and import your whole history in one shot.
-              No manual entry row by row. Sign up early and you'll get access the day it launches.
+              No manual entry row by row.
             </p>
           </div>
           <div className="shrink-0">
