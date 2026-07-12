@@ -124,9 +124,10 @@ export const LandingView = ({ onSignIn, onSignUp }: Props) => (
               </div>
               <pre className="mt-3 overflow-x-auto text-left font-mono text-xs leading-relaxed text-foreground">
 {`artist,date,venue,city,state
-Phish,1999-12-31,MSG,New York,NY
-Goose,2023-07-04,SPAC,Saratoga,NY
-Billy Strings,2022-08-05,Red Rocks,Morrison,CO`}
+Phish,1999-12-31,Big Cypress,Big Cypress,FL
+Grateful Dead,1977-05-08,Barton Hall,Ithaca,NY
+Daniel Donato's Cosmic Country,2026-04-03,XL Live,Harrisburg,PA
+Joe Russo's Almost Dead,2022-02-12,The Fillmore Philadelphia,Philadelphia,PA`}
               </pre>
             </div>
           </div>
